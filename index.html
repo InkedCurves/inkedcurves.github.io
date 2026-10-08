@@ -97,7 +97,12 @@ section h2 {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
 }
-
+.gallery img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+    
 .gallery .placeholder {
     aspect-ratio: 3 / 4;
     background: #f2f2f2;
@@ -157,7 +162,7 @@ footer {
     <h2>Galleria</h2>
 
     <div class="gallery">
-        <div class="placeholder">DISEGNO 01</div>
+        <img src="Opera_senza_titolo.jpeg" alt="Disegno Inked Curves">
         <div class="placeholder">DISEGNO 02</div>
         <div class="placeholder">DISEGNO 03</div>
         <div class="placeholder">DISEGNO 04</div>
