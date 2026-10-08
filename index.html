@@ -9,6 +9,11 @@
 <meta name="description" content="Inked Curves — Disegni originali in bianco e nero realizzati a mano con inchiostro.">
 
 <style>
+
+/* ================================
+   BASE
+================================ */
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -20,25 +25,27 @@ html {
 }
 
 body {
-    background: #fff;
-    color: #111;
+    background: #ffffff;
+    color: #111111;
     font-family: Georgia, "Times New Roman", serif;
-    line-height: 1.5;
 }
 
-/* HEADER */
+
+/* ================================
+   HEADER
+================================ */
 
 header {
-    padding: 42px 20px 32px;
+    padding: 45px 20px 35px;
     text-align: center;
     border-bottom: 1px solid #111;
 }
 
 .logo {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: clamp(32px, 8vw, 64px);
+    font-size: clamp(34px, 8vw, 64px);
     font-weight: 800;
-    letter-spacing: .12em;
+    letter-spacing: .13em;
     line-height: 1;
 }
 
@@ -46,18 +53,21 @@ header {
     margin-top: 15px;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 10px;
-    letter-spacing: .28em;
+    letter-spacing: .3em;
     text-transform: uppercase;
 }
 
-/* MENU */
+
+/* ================================
+   MENU
+================================ */
 
 nav {
     display: flex;
     justify-content: center;
     gap: 30px;
-    padding: 18px;
-    border-bottom: 1px solid #ddd;
+    padding: 18px 15px;
+    border-bottom: 1px solid #dddddd;
     flex-wrap: wrap;
 }
 
@@ -66,7 +76,7 @@ nav a {
     text-decoration: none;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 11px;
-    letter-spacing: .15em;
+    letter-spacing: .16em;
     text-transform: uppercase;
 }
 
@@ -74,7 +84,10 @@ nav a:hover {
     text-decoration: underline;
 }
 
-/* INTRO */
+
+/* ================================
+   INTRO
+================================ */
 
 .intro {
     max-width: 900px;
@@ -84,20 +97,24 @@ nav a:hover {
 }
 
 .intro h1 {
-    font-size: clamp(42px, 9vw, 90px);
+    font-size: clamp(44px, 9vw, 90px);
     font-weight: normal;
-    line-height: .95;
-    margin-bottom: 28px;
+    line-height: .92;
+    margin-bottom: 30px;
 }
 
 .intro p {
-    max-width: 650px;
+    max-width: 620px;
     margin: auto;
     color: #444;
     font-size: 18px;
+    line-height: 1.7;
 }
 
-/* GALLERY */
+
+/* ================================
+   GALLERY
+================================ */
 
 .gallery-section {
     max-width: 1250px;
@@ -105,7 +122,7 @@ nav a:hover {
     padding: 20px 20px 100px;
 }
 
-.section-title {
+.gallery-header {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
@@ -114,20 +131,24 @@ nav a:hover {
     margin-bottom: 35px;
 }
 
-.section-title h2 {
+.gallery-header h2 {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 13px;
     letter-spacing: .2em;
     text-transform: uppercase;
 }
 
-.section-title span {
+.gallery-count {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 11px;
+    font-size: 10px;
     color: #777;
+    letter-spacing: .1em;
 }
 
-/* GALLERY GRID */
+
+/* ================================
+   OPERE
+================================ */
 
 .gallery {
     display: grid;
@@ -135,15 +156,11 @@ nav a:hover {
     gap: 65px;
 }
 
-/* OPERA */
-
 .artwork {
     cursor: pointer;
-    width: 100%;
 }
 
 .artwork-image {
-    width: 100%;
     background: #fafafa;
     overflow: hidden;
 }
@@ -152,7 +169,7 @@ nav a:hover {
     display: block;
     width: 100%;
     height: auto;
-    transition: transform .45s ease;
+    transition: transform .5s ease;
 }
 
 .artwork:hover .artwork-image img {
@@ -163,23 +180,26 @@ nav a:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: 1px solid #111;
     margin-top: 10px;
     padding-top: 12px;
+    border-top: 1px solid #111;
 }
 
-.artwork-title {
+.artwork-name {
     font-size: 16px;
 }
 
 .artwork-number {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 10px;
-    letter-spacing: .15em;
     color: #777;
+    letter-spacing: .15em;
 }
 
-/* ABOUT */
+
+/* ================================
+   ABOUT
+================================ */
 
 .about {
     max-width: 900px;
@@ -198,21 +218,25 @@ nav a:hover {
 }
 
 .about p {
-    max-width: 700px;
+    max-width: 720px;
     font-size: 20px;
+    line-height: 1.7;
 }
 
-/* CONTACT */
+
+/* ================================
+   CONTACT
+================================ */
 
 .contact {
     padding: 80px 25px;
-    background: #111;
-    color: white;
+    background: #111111;
+    color: #ffffff;
     text-align: center;
 }
 
 .contact a {
-    color: white;
+    color: #ffffff;
     text-decoration: none;
     font-size: 20px;
 }
@@ -221,20 +245,26 @@ nav a:hover {
     text-decoration: underline;
 }
 
-/* FOOTER */
+
+/* ================================
+   FOOTER
+================================ */
 
 footer {
     padding: 25px;
-    background: #111;
+    background: #111111;
+    color: #777777;
     border-top: 1px solid #333;
-    color: #777;
     text-align: center;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 10px;
     letter-spacing: .12em;
 }
 
-/* FULLSCREEN */
+
+/* ================================
+   FULLSCREEN
+================================ */
 
 .lightbox {
     position: fixed;
@@ -268,18 +298,20 @@ footer {
     object-fit: contain;
 }
 
-/* CLOSE */
 
-.close-button {
+/* ================================
+   CHIUDI
+================================ */
+
+.close {
     position: fixed;
     top: 20px;
     right: 25px;
-    z-index: 10001;
 
     width: 45px;
     height: 45px;
 
-    border: 1px solid rgba(255,255,255,.5);
+    border: 1px solid rgba(255,255,255,.55);
     border-radius: 50%;
 
     background: transparent;
@@ -289,37 +321,42 @@ footer {
     font-weight: 200;
 
     cursor: pointer;
+    z-index: 10001;
 }
 
-.close-button:hover {
+.close:hover {
     background: white;
     color: black;
 }
 
-/* ARROWS */
 
-.lightbox-arrow {
+/* ================================
+   FRECCE
+================================ */
+
+.arrow {
     position: fixed;
     top: 50%;
     transform: translateY(-50%);
 
     z-index: 10001;
 
-    width: 55px;
+    width: 60px;
     height: 80px;
 
     border: none;
     background: transparent;
 
     color: white;
-    font-size: 45px;
+
+    font-size: 48px;
     font-weight: 200;
 
     cursor: pointer;
     opacity: .7;
 }
 
-.lightbox-arrow:hover {
+.arrow:hover {
     opacity: 1;
 }
 
@@ -331,45 +368,58 @@ footer {
     right: 10px;
 }
 
-.lightbox-caption {
+
+/* ================================
+   DIDASCALIA FULLSCREEN
+================================ */
+
+.caption {
     position: fixed;
-    bottom: 25px;
     left: 0;
     right: 0;
+    bottom: 25px;
+
+    text-align: center;
 
     color: rgba(255,255,255,.8);
-    text-align: center;
 
     font-family: Arial, Helvetica, sans-serif;
     font-size: 10px;
-    letter-spacing: .15em;
+    letter-spacing: .16em;
     text-transform: uppercase;
 }
 
-/* MOBILE */
+
+/* ================================
+   MOBILE
+================================ */
 
 @media (min-width: 700px) {
+
     .gallery {
         grid-template-columns: repeat(2, 1fr);
         gap: 55px 35px;
     }
+
 }
 
 @media (min-width: 1100px) {
+
     .gallery {
         grid-template-columns: repeat(3, 1fr);
         gap: 65px 35px;
     }
+
 }
 
 @media (max-width: 600px) {
 
     header {
-        padding-top: 30px;
+        padding-top: 32px;
     }
 
     nav {
-        gap: 16px;
+        gap: 17px;
     }
 
     .intro {
@@ -395,63 +445,111 @@ footer {
         max-height: 82vh;
     }
 
-    .lightbox-arrow {
+    .arrow {
         width: 35px;
-        font-size: 32px;
+        font-size: 34px;
     }
+
+    .arrow-left {
+        left: 0;
+    }
+
+    .arrow-right {
+        right: 0;
+    }
+
 }
 
-body.lightbox-open {
+
+/* BLOCCA LO SCROLL QUANDO L'IMMAGINE È APERTA */
+
+body.viewer-open {
     overflow: hidden;
 }
+
 </style>
 </head>
 
+
 <body>
 
+
 <header>
-    <div class="logo">INKED CURVES</div>
+
+    <div class="logo">
+        INKED CURVES
+    </div>
 
     <div class="tagline">
         Art · Ink · The human body
     </div>
+
 </header>
 
+
 <nav>
+
     <a href="#gallery">Galleria</a>
+
     <a href="#about">About</a>
+
     <a href="#contact">Contatti</a>
+
 </nav>
+
 
 <main>
 
+
 <section class="intro">
 
-    <h1>Il corpo<br>diventa segno.</h1>
+    <h1>
+        Il corpo<br>
+        diventa segno.
+    </h1>
 
     <p>
-        Disegni originali realizzati a mano,
-        in bianco e nero, attraverso il segno
-        dell'inchiostro.
+        Disegni originali in bianco e nero,
+        realizzati a mano attraverso il segno
+        diretto dell'inchiostro.
     </p>
 
 </section>
 
-<section class="gallery-section" id="gallery">
 
-    <div class="section-title">
-        <h2>Works</h2>
-        <span id="art-count">—</span>
+<section
+    class="gallery-section"
+    id="gallery"
+>
+
+    <div class="gallery-header">
+
+        <h2>
+            Works
+        </h2>
+
+        <div
+            class="gallery-count"
+            id="galleryCount"
+        >
+            —
+        </div>
+
     </div>
 
-    <div id="gallery-container" class="gallery">
+
+    <div
+        class="gallery"
+        id="galleryContainer"
+    >
 
         <div style="
+            grid-column:1/-1;
             text-align:center;
             padding:60px 20px;
-            color:#777;
             font-family:Arial,Helvetica,sans-serif;
             font-size:12px;
+            color:#777;
         ">
             Caricamento delle opere…
         </div>
@@ -460,22 +558,35 @@ body.lightbox-open {
 
 </section>
 
-<section class="about" id="about">
 
-    <h2>About</h2>
+<section
+    class="about"
+    id="about"
+>
+
+    <h2>
+        About
+    </h2>
 
     <p>
-        Inked Curves nasce dall'incontro tra il corpo,
-        la linea e l'inchiostro. Ogni disegno è realizzato
-        attraverso un segno diretto, imperfetto e umano.
+        Inked Curves nasce dall'incontro tra
+        il corpo, la linea e l'inchiostro.
+        Ogni disegno è realizzato attraverso
+        un segno diretto, imperfetto e umano.
         Bianco e nero. Carta e inchiostro.
     </p>
 
 </section>
 
-<section class="contact" id="contact">
 
-    <h2>Contact</h2>
+<section
+    class="contact"
+    id="contact"
+>
+
+    <h2>
+        Contact
+    </h2>
 
     <a href="mailto:inkedcurves@gmail.com">
         inkedcurves@gmail.com
@@ -483,45 +594,65 @@ body.lightbox-open {
 
 </section>
 
+
 </main>
 
+
 <footer>
+
     © 2026 INKED CURVES · ART & INK
+
 </footer>
 
 
-<!-- VISUALIZZATORE A PIENO SCHERMO -->
+<!-- =====================================
+     VISUALIZZATORE A PIENO SCHERMO
+===================================== -->
 
-<div id="lightbox" class="lightbox">
+<div
+    class="lightbox"
+    id="lightbox"
+>
 
     <button
+        class="close"
         id="closeButton"
-        class="close-button"
-        aria-label="Chiudi">
+        aria-label="Chiudi"
+    >
         ×
     </button>
 
+
     <button
+        class="arrow arrow-left"
         id="previousButton"
-        class="lightbox-arrow arrow-left"
-        aria-label="Opera precedente">
+        aria-label="Opera precedente"
+    >
         ‹
     </button>
 
+
     <img
-        id="lightboxImage"
         class="lightbox-image"
+        id="lightboxImage"
         src=""
-        alt="">
+        alt=""
+    >
+
 
     <button
+        class="arrow arrow-right"
         id="nextButton"
-        class="lightbox-arrow arrow-right"
-        aria-label="Opera successiva">
+        aria-label="Opera successiva"
+    >
         ›
     </button>
 
-    <div id="lightboxCaption" class="lightbox-caption"></div>
+
+    <div
+        class="caption"
+        id="lightboxCaption"
+    ></div>
 
 </div>
 
@@ -533,65 +664,96 @@ body.lightbox-open {
 INKED CURVES
 GALLERIA AUTOMATICA
 
-Per aggiungere un nuovo disegno NON devi modificare
-questo codice.
+Le immagini vengono cercate automaticamente nella
+cartella principale del repository GitHub.
 
-Devi soltanto caricare l'immagine nella cartella:
+Per aggiungere una nuova opera:
+carica semplicemente una nuova immagine nel repository.
 
-gallery
-
-del repository GitHub.
+NON modificare questo codice.
 =========================================================
 */
 
-const USER = "InkedCurves";
-const REPOSITORY = "inkedcurves.github.io";
-const FOLDER = "gallery";
 
-const gallery =
-    document.getElementById("gallery-container");
+const USER =
+    "InkedCurves";
 
-const count =
-    document.getElementById("art-count");
+const REPOSITORY =
+    "inkedcurves.github.io";
+
+
+const galleryContainer =
+    document.getElementById(
+        "galleryContainer"
+    );
+
+const galleryCount =
+    document.getElementById(
+        "galleryCount"
+    );
 
 const lightbox =
-    document.getElementById("lightbox");
+    document.getElementById(
+        "lightbox"
+    );
 
 const lightboxImage =
-    document.getElementById("lightboxImage");
+    document.getElementById(
+        "lightboxImage"
+    );
 
-const caption =
-    document.getElementById("lightboxCaption");
+const lightboxCaption =
+    document.getElementById(
+        "lightboxCaption"
+    );
 
 const closeButton =
-    document.getElementById("closeButton");
+    document.getElementById(
+        "closeButton"
+    );
 
 const previousButton =
-    document.getElementById("previousButton");
+    document.getElementById(
+        "previousButton"
+    );
 
 const nextButton =
-    document.getElementById("nextButton");
+    document.getElementById(
+        "nextButton"
+    );
+
 
 let artworks = [];
+
 let currentIndex = 0;
 
 
-/* CARICA AUTOMATICAMENTE LE IMMAGINI */
+/* ==========================================
+   CARICA LE IMMAGINI DAL REPOSITORY
+========================================== */
 
 async function loadGallery() {
 
     try {
 
-        const url =
-            `https://api.github.com/repos/${USER}/${REPOSITORY}/contents/${FOLDER}`;
+        const apiURL =
+            `https://api.github.com/repos/${USER}/${REPOSITORY}/contents/`;
 
-        const response = await fetch(url);
+        const response =
+            await fetch(apiURL);
 
         if (!response.ok) {
-            throw new Error("Gallery non trovata");
+
+            throw new Error(
+                "GitHub API error"
+            );
+
         }
 
-        const files = await response.json();
+
+        const files =
+            await response.json();
+
 
         const extensions = [
             ".jpg",
@@ -601,20 +763,28 @@ async function loadGallery() {
             ".gif"
         ];
 
+
         artworks = files
+
             .filter(file => {
 
-                const filename =
+                if (file.type !== "file") {
+                    return false;
+                }
+
+
+                const name =
                     file.name.toLowerCase();
 
-                return (
-                    file.type === "file" &&
-                    extensions.some(extension =>
-                        filename.endsWith(extension)
-                    )
+
+                return extensions.some(
+                    extension =>
+                        name.endsWith(extension)
                 );
 
             })
+
+
             .sort((a,b) =>
                 a.name.localeCompare(
                     b.name,
@@ -626,13 +796,17 @@ async function loadGallery() {
                 )
             );
 
+
         createGallery();
+
 
     } catch (error) {
 
         console.error(error);
 
-        gallery.innerHTML = `
+
+        galleryContainer.innerHTML = `
+
             <div style="
                 grid-column:1/-1;
                 text-align:center;
@@ -641,225 +815,365 @@ async function loadGallery() {
                 font-family:Arial,Helvetica,sans-serif;
                 font-size:12px;
             ">
-                Nessuna opera trovata.
+
+                Impossibile caricare
+                le opere.
+
             </div>
+
         `;
 
-        count.textContent = "0 opere";
     }
+
 }
 
 
-/* CREA LE MINIATURE */
+/* ==========================================
+   CREA LE MINIATURE
+========================================== */
 
 function createGallery() {
 
-    gallery.innerHTML = "";
+    galleryContainer.innerHTML = "";
+
 
     if (artworks.length === 0) {
 
-        gallery.innerHTML = `
+        galleryContainer.innerHTML = `
+
             <div style="
                 grid-column:1/-1;
                 text-align:center;
                 padding:60px 20px;
                 color:#777;
             ">
-                La galleria è ancora vuota.
+
+                Nessuna opera trovata.
+
             </div>
+
         `;
 
-        count.textContent = "0 opere";
+        galleryCount.textContent =
+            "0 opere";
 
         return;
+
     }
 
-    count.textContent =
+
+    galleryCount.textContent =
         artworks.length +
-        (artworks.length === 1
-            ? " opera"
-            : " opere");
-
-
-    artworks.forEach((artwork, index) => {
-
-        const card =
-            document.createElement("article");
-
-        card.className = "artwork";
-
-
-        const imageBox =
-            document.createElement("div");
-
-        imageBox.className =
-            "artwork-image";
-
-
-        const image =
-            document.createElement("img");
-
-        image.src =
-            artwork.download_url;
-
-        image.alt =
-            "Disegno Inked Curves " +
-            (index + 1);
-
-        image.loading = "lazy";
-
-
-        const info =
-            document.createElement("div");
-
-        info.className =
-            "artwork-info";
-
-
-        const title =
-            document.createElement("div");
-
-        title.className =
-            "artwork-title";
-
-        title.textContent =
-            cleanName(artwork.name);
-
-
-        const number =
-            document.createElement("div");
-
-        number.className =
-            "artwork-number";
-
-        number.textContent =
-            String(index + 1).padStart(2, "0");
-
-
-        imageBox.appendChild(image);
-
-        info.appendChild(title);
-        info.appendChild(number);
-
-        card.appendChild(imageBox);
-        card.appendChild(info);
-
-
-        card.addEventListener(
-            "click",
-            () => openArtwork(index)
+        (
+            artworks.length === 1
+                ? " opera"
+                : " opere"
         );
 
 
-        gallery.appendChild(card);
+    artworks.forEach(
+        (artwork, index) => {
 
-    });
+            const card =
+                document.createElement(
+                    "article"
+                );
+
+            card.className =
+                "artwork";
+
+
+            const imageBox =
+                document.createElement(
+                    "div"
+                );
+
+            imageBox.className =
+                "artwork-image";
+
+
+            const image =
+                document.createElement(
+                    "img"
+                );
+
+
+            image.src =
+                artwork.download_url;
+
+
+            image.alt =
+                "Opera Inked Curves " +
+                (index + 1);
+
+
+            image.loading =
+                "lazy";
+
+
+            const info =
+                document.createElement(
+                    "div"
+                );
+
+            info.className =
+                "artwork-info";
+
+
+            const name =
+                document.createElement(
+                    "div"
+                );
+
+            name.className =
+                "artwork-name";
+
+
+            name.textContent =
+                cleanName(
+                    artwork.name
+                );
+
+
+            const number =
+                document.createElement(
+                    "div"
+                );
+
+            number.className =
+                "artwork-number";
+
+
+            number.textContent =
+                String(index + 1)
+                    .padStart(2, "0");
+
+
+            imageBox.appendChild(
+                image
+            );
+
+
+            info.appendChild(
+                name
+            );
+
+
+            info.appendChild(
+                number
+            );
+
+
+            card.appendChild(
+                imageBox
+            );
+
+
+            card.appendChild(
+                info
+            );
+
+
+            card.addEventListener(
+                "click",
+                () => openArtwork(index)
+            );
+
+
+            galleryContainer.appendChild(
+                card
+            );
+
+        }
+    );
+
 }
 
 
-/* PULISCE IL NOME DEL FILE */
+/* ==========================================
+   NOME DELL'OPERA
+========================================== */
 
 function cleanName(filename) {
 
     return filename
-        .replace(/\.[^/.]+$/, "")
-        .replace(/[_-]+/g, " ")
-        .replace(/\b\w/g, letter =>
-            letter.toUpperCase()
+
+        .replace(
+            /\.[^/.]+$/,
+            ""
+        )
+
+        .replace(
+            /[_-]+/g,
+            " "
+        )
+
+        .replace(
+            /\b\w/g,
+            letter =>
+                letter.toUpperCase()
         );
+
 }
 
 
-/* APRI OPERA */
+/* ==========================================
+   APRI OPERA
+========================================== */
 
 function openArtwork(index) {
 
-    currentIndex = index;
+    if (!artworks.length) {
+        return;
+    }
+
+
+    currentIndex =
+        index;
+
 
     updateLightbox();
 
-    lightbox.classList.add("active");
+
+    lightbox.classList.add(
+        "active"
+    );
+
 
     document.body.classList.add(
-        "lightbox-open"
+        "viewer-open"
     );
+
 }
 
 
-/* AGGIORNA OPERA */
+/* ==========================================
+   AGGIORNA VISUALIZZAZIONE
+========================================== */
 
 function updateLightbox() {
 
     const artwork =
         artworks[currentIndex];
 
+
     lightboxImage.src =
         artwork.download_url;
 
-    lightboxImage.alt =
-        "Disegno Inked Curves";
 
-    caption.textContent =
-        `${String(currentIndex + 1).padStart(2,"0")} — ` +
-        cleanName(artwork.name);
+    lightboxImage.alt =
+        "Opera Inked Curves";
+
+
+    lightboxCaption.textContent =
+        String(
+            currentIndex + 1
+        ).padStart(2, "0")
+        +
+        " — "
+        +
+        cleanName(
+            artwork.name
+        );
+
 }
 
 
-/* CHIUDI */
+/* ==========================================
+   CHIUDI
+========================================== */
 
 function closeLightbox() {
 
-    lightbox.classList.remove("active");
-
-    document.body.classList.remove(
-        "lightbox-open"
+    lightbox.classList.remove(
+        "active"
     );
 
-    setTimeout(() => {
-        lightboxImage.src = "";
-    }, 250);
+
+    document.body.classList.remove(
+        "viewer-open"
+    );
+
+
+    setTimeout(
+        () => {
+
+            lightboxImage.src =
+                "";
+
+        },
+        250
+    );
+
 }
 
 
-/* PRECEDENTE */
+/* ==========================================
+   PRECEDENTE
+========================================== */
 
 function previousArtwork() {
 
-    if (!artworks.length) return;
+    if (!artworks.length) {
+        return;
+    }
+
 
     currentIndex =
-        (currentIndex - 1 + artworks.length)
-        % artworks.length;
+        (
+            currentIndex
+            - 1
+            + artworks.length
+        )
+        %
+        artworks.length;
+
 
     updateLightbox();
+
 }
 
 
-/* SUCCESSIVA */
+/* ==========================================
+   SUCCESSIVA
+========================================== */
 
 function nextArtwork() {
 
-    if (!artworks.length) return;
+    if (!artworks.length) {
+        return;
+    }
+
 
     currentIndex =
-        (currentIndex + 1)
-        % artworks.length;
+        (
+            currentIndex
+            + 1
+        )
+        %
+        artworks.length;
+
 
     updateLightbox();
+
 }
 
 
-/* PULSANTI */
+/* ==========================================
+   PULSANTI
+========================================== */
 
 closeButton.addEventListener(
     "click",
     closeLightbox
 );
 
+
 previousButton.addEventListener(
     "click",
     previousArtwork
 );
+
 
 nextButton.addEventListener(
     "click",
@@ -867,46 +1181,82 @@ nextButton.addEventListener(
 );
 
 
-/* CLIC SULLO SFONDO */
+/* ==========================================
+   CLIC SULLO SFONDO NERO
+========================================== */
 
 lightbox.addEventListener(
     "click",
     function(event) {
 
-        if (event.target === lightbox) {
+        if (
+            event.target ===
+            lightbox
+        ) {
+
             closeLightbox();
+
         }
 
     }
 );
 
 
-/* TASTIERA */
+/* ==========================================
+   TASTIERA
+========================================== */
 
 document.addEventListener(
     "keydown",
     function(event) {
 
-        if (!lightbox.classList.contains("active")) {
+        if (
+            !lightbox.classList.contains(
+                "active"
+            )
+        ) {
+
             return;
+
         }
 
-        if (event.key === "Escape") {
+
+        if (
+            event.key ===
+            "Escape"
+        ) {
+
             closeLightbox();
+
         }
 
-        if (event.key === "ArrowLeft") {
+
+        if (
+            event.key ===
+            "ArrowLeft"
+        ) {
+
             previousArtwork();
+
         }
 
-        if (event.key === "ArrowRight") {
+
+        if (
+            event.key ===
+            "ArrowRight"
+        ) {
+
             nextArtwork();
+
         }
+
     }
 );
 
 
-/* SWIPE SU TELEFONO */
+/* ==========================================
+   SWIPE SU IPHONE
+========================================== */
 
 let touchStartX = 0;
 
@@ -918,10 +1268,13 @@ lightbox.addEventListener(
     function(event) {
 
         touchStartX =
-            event.changedTouches[0].screenX;
+            event.changedTouches[0]
+                .screenX;
 
     },
-    { passive: true }
+    {
+        passive: true
+    }
 );
 
 
@@ -930,27 +1283,47 @@ lightbox.addEventListener(
     function(event) {
 
         touchEndX =
-            event.changedTouches[0].screenX;
+            event.changedTouches[0]
+                .screenX;
+
 
         const difference =
-            touchStartX - touchEndX;
+            touchStartX -
+            touchEndX;
 
-        if (Math.abs(difference) < 50) {
+
+        if (
+            Math.abs(difference)
+            < 50
+        ) {
+
             return;
+
         }
 
-        if (difference > 0) {
+
+        if (
+            difference > 0
+        ) {
+
             nextArtwork();
+
         } else {
+
             previousArtwork();
+
         }
 
     },
-    { passive: true }
+    {
+        passive: true
+    }
 );
 
 
-/* AVVIO */
+/* ==========================================
+   AVVIO
+========================================== */
 
 loadGallery();
 
