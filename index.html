@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -28,6 +29,7 @@ body {
     background: #ffffff;
     color: #111111;
     font-family: Georgia, "Times New Roman", serif;
+    line-height: 1.5;
 }
 
 
@@ -36,16 +38,16 @@ body {
 ================================ */
 
 header {
-    padding: 45px 20px 35px;
+    padding: 42px 20px 32px;
     text-align: center;
-    border-bottom: 1px solid #111;
+    border-bottom: 1px solid #111111;
 }
 
 .logo {
     font-family: Arial, Helvetica, sans-serif;
     font-size: clamp(34px, 8vw, 64px);
     font-weight: 800;
-    letter-spacing: .13em;
+    letter-spacing: 0.13em;
     line-height: 1;
 }
 
@@ -53,7 +55,7 @@ header {
     margin-top: 15px;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 10px;
-    letter-spacing: .3em;
+    letter-spacing: 0.3em;
     text-transform: uppercase;
 }
 
@@ -72,11 +74,11 @@ nav {
 }
 
 nav a {
-    color: #111;
+    color: #111111;
     text-decoration: none;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 11px;
-    letter-spacing: .16em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
 }
 
@@ -92,21 +94,21 @@ nav a:hover {
 .intro {
     max-width: 900px;
     margin: auto;
-    padding: 90px 25px 75px;
+    padding: 85px 25px 70px;
     text-align: center;
 }
 
 .intro h1 {
     font-size: clamp(44px, 9vw, 90px);
     font-weight: normal;
-    line-height: .92;
-    margin-bottom: 30px;
+    line-height: 0.92;
+    margin-bottom: 28px;
 }
 
 .intro p {
     max-width: 620px;
     margin: auto;
-    color: #444;
+    color: #444444;
     font-size: 18px;
     line-height: 1.7;
 }
@@ -126,74 +128,89 @@ nav a:hover {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    border-bottom: 1px solid #111;
+    border-bottom: 1px solid #111111;
     padding-bottom: 12px;
-    margin-bottom: 35px;
+    margin-bottom: 30px;
 }
 
 .gallery-header h2 {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 13px;
-    letter-spacing: .2em;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
 }
 
 .gallery-count {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 10px;
-    color: #777;
-    letter-spacing: .1em;
+    color: #777777;
+    letter-spacing: 0.1em;
 }
 
 
 /* ================================
-   OPERE
+   MINIATURE
 ================================ */
 
 .gallery {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 65px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px 18px;
 }
 
 .artwork {
     cursor: pointer;
+    min-width: 0;
 }
 
 .artwork-image {
-    background: #fafafa;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    background: #f8f8f8;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .artwork-image img {
     display: block;
     width: 100%;
-    height: auto;
-    transition: transform .5s ease;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.4s ease;
 }
 
 .artwork:hover .artwork-image img {
-    transform: scale(1.015);
+    transform: scale(1.025);
 }
+
+
+/* ================================
+   INFO OPERA
+================================ */
 
 .artwork-info {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 10px;
-    padding-top: 12px;
-    border-top: 1px solid #111;
+
+    margin-top: 9px;
+    padding-top: 9px;
+
+    border-top: 1px solid #111111;
 }
 
 .artwork-name {
-    font-size: 16px;
+    font-size: 14px;
+    line-height: 1.2;
 }
 
 .artwork-number {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 10px;
-    color: #777;
-    letter-spacing: .15em;
+    font-size: 9px;
+    color: #777777;
+    letter-spacing: 0.15em;
 }
 
 
@@ -204,15 +221,15 @@ nav a:hover {
 .about {
     max-width: 900px;
     margin: auto;
-    padding: 90px 25px;
-    border-top: 1px solid #111;
+    padding: 85px 25px;
+    border-top: 1px solid #111111;
 }
 
 .about h2,
 .contact h2 {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 13px;
-    letter-spacing: .2em;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
     margin-bottom: 25px;
 }
@@ -254,16 +271,17 @@ footer {
     padding: 25px;
     background: #111111;
     color: #777777;
-    border-top: 1px solid #333;
+    border-top: 1px solid #333333;
     text-align: center;
+
     font-family: Arial, Helvetica, sans-serif;
     font-size: 10px;
-    letter-spacing: .12em;
+    letter-spacing: 0.12em;
 }
 
 
 /* ================================
-   FULLSCREEN
+   VISUALIZZATORE FULLSCREEN
 ================================ */
 
 .lightbox {
@@ -275,13 +293,13 @@ footer {
     align-items: center;
     justify-content: center;
 
-    background: rgba(0,0,0,.97);
+    background: rgba(0, 0, 0, 0.97);
 
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
 
-    transition: opacity .25s ease;
+    transition: opacity 0.25s ease;
 }
 
 .lightbox.active {
@@ -293,40 +311,44 @@ footer {
 .lightbox-image {
     max-width: 92vw;
     max-height: 90vh;
+
     width: auto;
     height: auto;
+
     object-fit: contain;
 }
 
 
 /* ================================
-   CHIUDI
+   PULSANTE CHIUDI
 ================================ */
 
 .close {
     position: fixed;
     top: 20px;
-    right: 25px;
+    right: 22px;
+
+    z-index: 10001;
 
     width: 45px;
     height: 45px;
 
-    border: 1px solid rgba(255,255,255,.55);
+    border: 1px solid rgba(255,255,255,0.55);
     border-radius: 50%;
 
     background: transparent;
-    color: white;
+    color: #ffffff;
 
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 28px;
     font-weight: 200;
 
     cursor: pointer;
-    z-index: 10001;
 }
 
 .close:hover {
-    background: white;
-    color: black;
+    background: #ffffff;
+    color: #000000;
 }
 
 
@@ -347,13 +369,15 @@ footer {
     border: none;
     background: transparent;
 
-    color: white;
+    color: #ffffff;
 
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 48px;
     font-weight: 200;
 
     cursor: pointer;
-    opacity: .7;
+
+    opacity: 0.7;
 }
 
 .arrow:hover {
@@ -375,42 +399,54 @@ footer {
 
 .caption {
     position: fixed;
+
     left: 0;
     right: 0;
-    bottom: 25px;
+    bottom: 24px;
 
     text-align: center;
 
-    color: rgba(255,255,255,.8);
+    color: rgba(255,255,255,0.8);
 
     font-family: Arial, Helvetica, sans-serif;
     font-size: 10px;
-    letter-spacing: .16em;
+
+    letter-spacing: 0.16em;
     text-transform: uppercase;
+}
+
+
+/* ================================
+   TABLET
+================================ */
+
+@media (min-width: 700px) {
+
+    .gallery {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 35px 25px;
+    }
+
+}
+
+
+/* ================================
+   COMPUTER
+================================ */
+
+@media (min-width: 1100px) {
+
+    .gallery {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 40px 25px;
+    }
+
 }
 
 
 /* ================================
    MOBILE
 ================================ */
-
-@media (min-width: 700px) {
-
-    .gallery {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 55px 35px;
-    }
-
-}
-
-@media (min-width: 1100px) {
-
-    .gallery {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 65px 35px;
-    }
-
-}
 
 @media (max-width: 600px) {
 
@@ -437,7 +473,16 @@ footer {
     }
 
     .gallery {
-        gap: 50px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 28px 14px;
+    }
+
+    .artwork-name {
+        font-size: 12px;
+    }
+
+    .artwork-number {
+        font-size: 8px;
     }
 
     .lightbox-image {
@@ -461,7 +506,9 @@ footer {
 }
 
 
-/* BLOCCA LO SCROLL QUANDO L'IMMAGINE È APERTA */
+/* ================================
+   BLOCCA SCROLL
+================================ */
 
 body.viewer-open {
     overflow: hidden;
@@ -473,6 +520,10 @@ body.viewer-open {
 
 <body>
 
+
+<!-- ================================
+     HEADER
+================================ -->
 
 <header>
 
@@ -487,19 +538,33 @@ body.viewer-open {
 </header>
 
 
+<!-- ================================
+     MENU
+================================ -->
+
 <nav>
 
-    <a href="#gallery">Galleria</a>
+    <a href="#gallery">
+        Galleria
+    </a>
 
-    <a href="#about">About</a>
+    <a href="#about">
+        About
+    </a>
 
-    <a href="#contact">Contatti</a>
+    <a href="#contact">
+        Contatti
+    </a>
 
 </nav>
 
 
 <main>
 
+
+<!-- ================================
+     INTRO
+================================ -->
 
 <section class="intro">
 
@@ -516,6 +581,10 @@ body.viewer-open {
 
 </section>
 
+
+<!-- ================================
+     GALLERIA
+================================ -->
 
 <section
     class="gallery-section"
@@ -547,17 +616,23 @@ body.viewer-open {
             grid-column:1/-1;
             text-align:center;
             padding:60px 20px;
+            color:#777;
             font-family:Arial,Helvetica,sans-serif;
             font-size:12px;
-            color:#777;
         ">
+
             Caricamento delle opere…
+
         </div>
 
     </div>
 
 </section>
 
+
+<!-- ================================
+     ABOUT
+================================ -->
 
 <section
     class="about"
@@ -579,6 +654,10 @@ body.viewer-open {
 </section>
 
 
+<!-- ================================
+     CONTATTI
+================================ -->
+
 <section
     class="contact"
     id="contact"
@@ -598,6 +677,10 @@ body.viewer-open {
 </main>
 
 
+<!-- ================================
+     FOOTER
+================================ -->
+
 <footer>
 
     © 2026 INKED CURVES · ART & INK
@@ -605,9 +688,9 @@ body.viewer-open {
 </footer>
 
 
-<!-- =====================================
-     VISUALIZZATORE A PIENO SCHERMO
-===================================== -->
+<!-- ================================
+     FULLSCREEN VIEWER
+================================ -->
 
 <div
     class="lightbox"
@@ -659,28 +742,19 @@ body.viewer-open {
 
 <script>
 
-/*
-=========================================================
-INKED CURVES
-GALLERIA AUTOMATICA
+/* ==========================================
+   CONFIGURAZIONE
+========================================== */
 
-Le immagini vengono cercate automaticamente nella
-cartella principale del repository GitHub.
-
-Per aggiungere una nuova opera:
-carica semplicemente una nuova immagine nel repository.
-
-NON modificare questo codice.
-=========================================================
-*/
-
-
-const USER =
-    "InkedCurves";
+const USER = "InkedCurves";
 
 const REPOSITORY =
     "inkedcurves.github.io";
 
+
+/* ==========================================
+   ELEMENTI
+========================================== */
 
 const galleryContainer =
     document.getElementById(
@@ -729,8 +803,13 @@ let currentIndex = 0;
 
 
 /* ==========================================
-   CARICA LE IMMAGINI DAL REPOSITORY
-========================================== */
+   CARICA LE IMMAGINI
+
+   Le immagini vengono cercate nella
+   cartella principale del repository.
+
+   index.html viene ignorato.
+   ========================================== */
 
 async function loadGallery() {
 
@@ -742,10 +821,11 @@ async function loadGallery() {
         const response =
             await fetch(apiURL);
 
+
         if (!response.ok) {
 
             throw new Error(
-                "GitHub API error"
+                "Errore GitHub API"
             );
 
         }
@@ -755,7 +835,7 @@ async function loadGallery() {
             await response.json();
 
 
-        const extensions = [
+        const imageExtensions = [
             ".jpg",
             ".jpeg",
             ".png",
@@ -764,28 +844,35 @@ async function loadGallery() {
         ];
 
 
-        artworks = files
+        artworks = files.filter(
+            file => {
 
-            .filter(file => {
+                if (
+                    file.type !== "file"
+                ) {
 
-                if (file.type !== "file") {
                     return false;
+
                 }
 
 
-                const name =
+                const filename =
                     file.name.toLowerCase();
 
 
-                return extensions.some(
+                return imageExtensions.some(
                     extension =>
-                        name.endsWith(extension)
+                        filename.endsWith(
+                            extension
+                        )
                 );
 
-            })
+            }
+        );
 
 
-            .sort((a,b) =>
+        artworks.sort(
+            (a, b) =>
                 a.name.localeCompare(
                     b.name,
                     undefined,
@@ -794,13 +881,14 @@ async function loadGallery() {
                         sensitivity: "base"
                     }
                 )
-            );
+        );
 
 
         createGallery();
 
+    }
 
-    } catch (error) {
+    catch (error) {
 
         console.error(error);
 
@@ -829,7 +917,7 @@ async function loadGallery() {
 
 
 /* ==========================================
-   CREA LE MINIATURE
+   CREA LA GALLERIA
 ========================================== */
 
 function createGallery() {
@@ -837,7 +925,9 @@ function createGallery() {
     galleryContainer.innerHTML = "";
 
 
-    if (artworks.length === 0) {
+    if (
+        artworks.length === 0
+    ) {
 
         galleryContainer.innerHTML = `
 
@@ -854,8 +944,10 @@ function createGallery() {
 
         `;
 
+
         galleryCount.textContent =
             "0 opere";
+
 
         return;
 
@@ -873,6 +965,7 @@ function createGallery() {
 
     artworks.forEach(
         (artwork, index) => {
+
 
             const card =
                 document.createElement(
@@ -976,7 +1069,8 @@ function createGallery() {
 
             card.addEventListener(
                 "click",
-                () => openArtwork(index)
+                () =>
+                    openArtwork(index)
             );
 
 
@@ -1018,13 +1112,17 @@ function cleanName(filename) {
 
 
 /* ==========================================
-   APRI OPERA
+   APRI FULLSCREEN
 ========================================== */
 
 function openArtwork(index) {
 
-    if (!artworks.length) {
+    if (
+        artworks.length === 0
+    ) {
+
         return;
+
     }
 
 
@@ -1048,7 +1146,7 @@ function openArtwork(index) {
 
 
 /* ==========================================
-   AGGIORNA VISUALIZZAZIONE
+   AGGIORNA FULLSCREEN
 ========================================== */
 
 function updateLightbox() {
@@ -1098,8 +1196,7 @@ function closeLightbox() {
     setTimeout(
         () => {
 
-            lightboxImage.src =
-                "";
+            lightboxImage.src = "";
 
         },
         250
@@ -1114,8 +1211,12 @@ function closeLightbox() {
 
 function previousArtwork() {
 
-    if (!artworks.length) {
+    if (
+        artworks.length === 0
+    ) {
+
         return;
+
     }
 
 
@@ -1140,8 +1241,12 @@ function previousArtwork() {
 
 function nextArtwork() {
 
-    if (!artworks.length) {
+    if (
+        artworks.length === 0
+    ) {
+
         return;
+
     }
 
 
@@ -1190,8 +1295,7 @@ lightbox.addEventListener(
     function(event) {
 
         if (
-            event.target ===
-            lightbox
+            event.target === lightbox
         ) {
 
             closeLightbox();
@@ -1222,8 +1326,7 @@ document.addEventListener(
 
 
         if (
-            event.key ===
-            "Escape"
+            event.key === "Escape"
         ) {
 
             closeLightbox();
@@ -1232,8 +1335,7 @@ document.addEventListener(
 
 
         if (
-            event.key ===
-            "ArrowLeft"
+            event.key === "ArrowLeft"
         ) {
 
             previousArtwork();
@@ -1242,8 +1344,7 @@ document.addEventListener(
 
 
         if (
-            event.key ===
-            "ArrowRight"
+            event.key === "ArrowRight"
         ) {
 
             nextArtwork();
@@ -1293,8 +1394,7 @@ lightbox.addEventListener(
 
 
         if (
-            Math.abs(difference)
-            < 50
+            Math.abs(difference) < 50
         ) {
 
             return;
@@ -1308,7 +1408,9 @@ lightbox.addEventListener(
 
             nextArtwork();
 
-        } else {
+        }
+
+        else {
 
             previousArtwork();
 
