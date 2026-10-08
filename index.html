@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Inked Curves</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #ffffff;
+    color: #111111;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+header {
+    padding: 35px 25px 25px;
+    border-bottom: 1px solid #111;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 32px;
+    letter-spacing: 5px;
+    font-weight: 500;
+}
+
+header p {
+    margin: 10px 0 0;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+nav {
+    padding: 18px 10px;
+    text-align: center;
+}
+
+nav a {
+    color: #111;
+    text-decoration: none;
+    margin: 0 12px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+.hero {
+    min-height: 55vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 25px;
+}
+
+.hero h2 {
+    font-size: clamp(38px, 8vw, 80px);
+    font-weight: 400;
+    line-height: 1;
+    margin: 0;
+}
+
+.hero span {
+    display: block;
+    margin-top: 20px;
+    font-size: 14px;
+    letter-spacing: 2px;
+}
+
+section {
+    padding: 60px 20px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+section h2 {
+    font-size: 25px;
+    font-weight: 400;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.gallery .placeholder {
+    aspect-ratio: 3 / 4;
+    background: #f2f2f2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+
+.about {
+    max-width: 650px;
+    text-align: center;
+    line-height: 1.7;
+    margin: auto;
+}
+
+footer {
+    border-top: 1px solid #111;
+    padding: 35px 20px;
+    text-align: center;
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+
+@media (min-width: 800px) {
+    .gallery {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>INKED CURVES</h1>
+    <p>Art · Ink · The human body</p>
+</header>
+
+<nav>
+    <a href="#galleria">Galleria</a>
+    <a href="#nudo">Nudo artistico</a>
+    <a href="#chi-sono">Chi sono</a>
+    <a href="#contatti">Contatti</a>
+</nav>
+
+<div class="hero">
+    <div>
+        <h2>Il corpo<br>diventa segno.</h2>
+        <span>Disegni originali a inchiostro</span>
+    </div>
+</div>
+
+<section id="galleria">
+    <h2>Galleria</h2>
+
+    <div class="gallery">
+        <div class="placeholder">DISEGNO 01</div>
+        <div class="placeholder">DISEGNO 02</div>
+        <div class="placeholder">DISEGNO 03</div>
+        <div class="placeholder">DISEGNO 04</div>
+        <div class="placeholder">DISEGNO 05</div>
+        <div class="placeholder">DISEGNO 06</div>
+    </div>
+</section>
+
+<section id="nudo">
+    <h2>Nudo artistico</h2>
+
+    <div class="about">
+        <p>
+            Una raccolta di illustrazioni dedicate alla figura umana.
+            Il corpo viene interpretato attraverso linee, segni,
+            contrasti e inchiostro, senza cercare la perfezione.
+        </p>
+    </div>
+</section>
+
+<section id="chi-sono">
+    <h2>Chi sono</h2>
+
+    <div class="about">
+        <p>
+            Inked Curves nasce dalla passione per il disegno a mano
+            e per il corpo umano come elemento grafico ed espressivo.
+        </p>
+    </div>
+</section>
+
+<section id="contatti">
+    <h2>Contatti</h2>
+
+    <div class="about">
+        <p>
+            Per collaborazioni, ritratti o informazioni,
+            contattami tramite Instagram.
+        </p>
+
+        <p>
+            <strong>@inked_curves</strong>
+        </p>
+    </div>
+</section>
+
+<footer>
+    © Inked Curves
+</footer>
+
+</body>
+</html>
