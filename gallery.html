@@ -4,15 +4,191 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Galleria di illustrazioni Inked Curves.">
+  <meta name="description" content="Galleria di illustrazioni a inchiostro di Inked Curves.">
   <title>Gallery — Inked Curves</title>
   <link rel="stylesheet" href="style.css">
+
+  <style>
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .artwork-card {
+      min-width: 0;
+      text-align: center;
+    }
+
+    .artwork-image-button {
+      display: block;
+      width: 100%;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .artwork-image-button img {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      background: #fff;
+    }
+
+    .artwork-name {
+      margin: 10px 0 5px;
+      font-size: 14px;
+    }
+
+    .artwork-name a,
+    .artwork-model-link {
+      color: inherit;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .artwork-actions {
+      margin-top: 10px;
+    }
+
+    .copy-artwork-link {
+      padding: 8px 10px;
+      border: 1px solid currentColor;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .gallery-message {
+      padding: 25px 0;
+      text-align: center;
+    }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.96);
+      padding: 55px 52px 35px;
+      box-sizing: border-box;
+    }
+
+    .lightbox.is-open {
+      display: flex;
+    }
+
+    .lightbox-image {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .lightbox-close,
+    .lightbox-prev,
+    .lightbox-next {
+      position: absolute;
+      z-index: 2;
+      border: 0;
+      background: rgba(30, 30, 30, 0.85);
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lightbox-close {
+      top: 12px;
+      right: 14px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      font-size: 30px;
+    }
+
+    .lightbox-prev,
+    .lightbox-next {
+      top: 50%;
+      transform: translateY(-50%);
+      width: 42px;
+      height: 54px;
+      border-radius: 5px;
+      font-size: 28px;
+    }
+
+    .lightbox-prev {
+      left: 6px;
+    }
+
+    .lightbox-next {
+      right: 6px;
+    }
+
+    .lightbox-copy {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 9px 13px;
+      border: 1px solid #fff;
+      background: rgba(20, 20, 20, 0.9);
+      color: #fff;
+      font: inherit;
+      font-size: 13px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .lightbox-counter {
+      position: absolute;
+      top: 23px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #fff;
+      font-size: 12px;
+    }
+
+    @media (max-width: 480px) {
+      .gallery-grid {
+        gap: 12px;
+      }
+
+      .lightbox {
+        padding: 55px 38px 55px;
+      }
+
+      .lightbox-prev {
+        left: 2px;
+      }
+
+      .lightbox-next {
+        right: 2px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-  <header>
+  <header class="site-header">
     <div class="container nav">
       <a class="logo" href="index.html">INKED CURVES</a>
-      <button class="menu-toggle" aria-label="Apri il menu" aria-expanded="false">☰</button>
+
+      <button class="menu-toggle" aria-label="Apri il menu"
+        aria-expanded="false">
+        ☰
+      </button>
+
       <nav class="nav-links">
         <a href="index.html">Home</a>
         <a href="gallery.html">Gallery</a>
@@ -23,289 +199,335 @@
   </header>
 
   <main class="container page">
-    <div class="page-intro">
+    <section class="page-intro">
       <p class="eyebrow">ILLUSTRAZIONE · CORPO · INCHIOSTRO</p>
       <h1>Selected works</h1>
-      <p>Una selezione di disegni, tratti e suggestioni.</p>
+      <p>
+        Una selezione di disegni, tratti e suggestioni.
+        Tocca un'opera per aprirla e condividerne il link diretto.
+      </p>
+    </section>
+
+    <div id="gallery-message" class="gallery-message">
+      Caricamento delle opere...
     </div>
 
-    <div class="gallery-grid" id="galleryGrid">
-      <p class="gallery-status">Caricamento delle opere…</p>
-    </div>
-    <p class="gallery-status" id="galleryError" hidden></p>
+    <section id="gallery-grid" class="gallery-grid"
+      aria-label="Galleria delle opere"></section>
   </main>
 
-  <footer>
-    <div class="container footer-inner">
-      <span>© <span class="year"></span> INKED CURVES</span>
-      <span>IL CORPO DIVENTA ARTE.</span>
-    </div>
-  </footer>
+  <div id="lightbox" class="lightbox"
+    role="dialog" aria-modal="true" aria-label="Opera ingrandita">
 
-  <div class="lightbox" id="lightbox" aria-hidden="true">
-    <button class="lightbox-close" id="closeLightbox" aria-label="Chiudi">×</button>
-    <button class="lightbox-prev" id="prevImage" aria-label="Opera precedente">‹</button>
-    <img id="lightboxImage" alt="">
-    <button class="lightbox-next" id="nextImage" aria-label="Opera successiva">›</button>
+    <button id="lightbox-close" class="lightbox-close"
+      aria-label="Chiudi">×</button>
+
+    <button id="lightbox-prev" class="lightbox-prev"
+      aria-label="Opera precedente">‹</button>
+
+    <img id="lightbox-image" class="lightbox-image" src=""
+      alt="Illustrazione ingrandita">
+
+    <button id="lightbox-next" class="lightbox-next"
+      aria-label="Opera successiva">›</button>
+
+    <div id="lightbox-counter" class="lightbox-counter"></div>
+
+    <button id="lightbox-copy" class="lightbox-copy">
+      Copia link dell'opera
+    </button>
   </div>
 
   <script>
-    const REPOSITORY = "InkedCurves/inkedcurves.github.io";
-    const ROOT_API = `https://api.github.com/repos/${REPOSITORY}/contents/`;
+    const USER = "InkedCurves";
+    const REPO = "inkedcurves.github.io";
+    const BRANCH = "main";
 
-    const grid = document.getElementById("galleryGrid");
-    const errorMessage = document.getElementById("galleryError");
+    const galleryGrid = document.getElementById("gallery-grid");
+    const galleryMessage = document.getElementById("gallery-message");
     const lightbox = document.getElementById("lightbox");
-    const lightboxImage = document.getElementById("lightboxImage");
+    const lightboxImage = document.getElementById("lightbox-image");
+    const lightboxCounter = document.getElementById("lightbox-counter");
+    const lightboxCopy = document.getElementById("lightbox-copy");
 
     let artworks = [];
-    let currentIndex = 0;
-    let touchStartX = 0;
+    let currentIndex = -1;
+    let previousUrl = window.location.href;
+    let openedFromDirectLink = false;
 
-    document.querySelector(".year").textContent = new Date().getFullYear();
+    const imageExtensions = /\.(jpe?g|png|webp|gif|avif)$/i;
 
-    const toggle = document.querySelector(".menu-toggle");
-    const menu = document.querySelector(".nav-links");
+    function rawImageUrl(path) {
+      return "https://raw.githubusercontent.com/" +
+        USER + "/" + REPO + "/" + BRANCH + "/" +
+        path.split("/").map(encodeURIComponent).join("/");
+    }
 
-    toggle.addEventListener("click", () => {
-      const open = menu.classList.toggle("open");
-      toggle.setAttribute("aria-expanded", String(open));
-      toggle.setAttribute("aria-label", open ? "Chiudi il menu" : "Apri il menu");
-    });
+    function getArtworkLink(artwork) {
+      const url = new URL("gallery.html", window.location.href);
+      url.searchParams.set("opera", artwork.path);
+      return url.href;
+    }
 
-    menu.querySelectorAll("a").forEach(link => {
-      link.addEventListener("click", () => menu.classList.remove("open"));
-    });
+    async function copyArtworkLink(artwork) {
+      const link = getArtworkLink(artwork);
 
-    async function loadModelLinks() {
       try {
-        const response = await fetch(`./modelle.json?v=${Date.now()}`, {
-          cache: "no-store"
-        });
-
-        if (!response.ok) throw new Error("File modelle.json non trovato");
-
-        const data = await response.json();
-
-        if (!data || typeof data !== "object" || Array.isArray(data)) {
-          throw new Error("Formato modelle.json non valido");
-        }
-
-        return data;
+        await navigator.clipboard.writeText(link);
+        return true;
       } catch (error) {
-        console.warn("Errore modelle.json:", error);
-        return {};
-      }
-    }
-
-    async function loadImages(path) {
-      try {
-        const response = await fetch(ROOT_API + path, {
-          cache: "no-store"
-        });
-
-        if (!response.ok) return [];
-
-        const items = await response.json();
-
-        if (!Array.isArray(items)) return [];
-
-        return items.filter(item =>
-          item.type === "file" &&
-          /\.(jpe?g|png|webp|gif|avif)$/i.test(item.name)
-        );
-      } catch (error) {
-        console.warn("Errore nel caricamento delle immagini:", error);
-        return [];
-      }
-    }
-
-    function getModel(image, links) {
-      const keys = [
-        image.name,
-        image.path,
-        image.path.replace(/^gallery\//, "")
-      ];
-
-      for (const key of keys) {
-        const value = links[key];
-
-        if (value && typeof value === "object") {
-          return {
-            nome: typeof value.nome === "string" ? value.nome.trim() : "",
-            instagram: typeof value.instagram === "string"
-              ? value.instagram.trim()
-              : ""
-          };
-        }
-
-        if (typeof value === "string") {
-          return { nome: "", instagram: value.trim() };
-        }
-      }
-
-      return { nome: "", instagram: "" };
-    }
-
-    function validInstagram(value) {
-      try {
-        const url = new URL(value);
-        return url.protocol === "https:" &&
-          ["instagram.com", "www.instagram.com"].includes(url.hostname);
-      } catch {
+        window.prompt("Copia questo link:", link);
         return false;
       }
     }
 
-    function makeArtwork(image, index, links) {
-      const article = document.createElement("article");
-      article.className = "artwork";
-
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "artwork-image";
-      button.setAttribute("aria-label", `Ingrandisci opera ${index + 1}`);
-
-      const img = document.createElement("img");
-      img.src = image.download_url;
-      img.alt = `Inked Curves — ${image.name}`;
-      img.loading = index < 2 ? "eager" : "lazy";
-      img.decoding = "async";
-
-      const number = document.createElement("span");
-      number.className = "artwork-number";
-      number.textContent = String(index + 1).padStart(2, "0");
-
-      button.append(img, number);
-      button.addEventListener("click", () => openLightbox(index));
-
-      const caption = document.createElement("div");
-      caption.className = "artwork-caption";
-
-      const name = document.createElement("h2");
-      name.className = "model-name";
-      name.hidden = true;
-
-      const link = document.createElement("a");
-      link.className = "model-link";
-      link.hidden = true;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-
-      const symbol = document.createElement("span");
-      symbol.textContent = "◎";
-
-      const text = document.createElement("span");
-      text.textContent = "Scopri la modella su Instagram ↗";
-
-      link.append(symbol, text);
-
-      const model = getModel(image, links);
-
-      if (model.nome) {
-        name.textContent = model.nome;
-        name.hidden = false;
-      }
-
-      if (model.instagram && validInstagram(model.instagram)) {
-        link.href = model.instagram;
-        link.hidden = false;
-      }
-
-      caption.append(name, link);
-      article.append(button, caption);
-
-      return article;
-    }
-
-    async function loadGallery() {
-      const [links, rootImages, folderImages] = await Promise.all([
-        loadModelLinks(),
-        loadImages(""),
-        loadImages("gallery")
-      ]);
-
-      const seen = new Set();
-
-      artworks = [...rootImages, ...folderImages]
-        .filter(image => {
-          const key = image.path || image.name;
-          if (seen.has(key)) return false;
-          seen.add(key);
-          return true;
-        })
-        .sort((a, b) =>
-          a.name.localeCompare(b.name, "it", { numeric: true })
+    async function loadModelle() {
+      try {
+        const response = await fetch(
+          "https://raw.githubusercontent.com/" +
+          USER + "/" + REPO + "/" + BRANCH + "/modelle.json"
         );
 
-      grid.replaceChildren();
+        if (!response.ok) return {};
 
-      if (!artworks.length) {
-        errorMessage.hidden = false;
-        errorMessage.textContent =
-          "Non sono state trovate immagini. Controlla il repository GitHub.";
-        return;
+        return await response.json();
+      } catch (error) {
+        return {};
+      }
+    }
+
+    async function loadDirectory(path) {
+      const endpoint =
+        "https://api.github.com/repos/" + USER + "/" + REPO +
+        "/contents/" + path + "?ref=" + BRANCH;
+
+      const response = await fetch(endpoint);
+
+      if (!response.ok) return [];
+
+      const items = await response.json();
+
+      if (!Array.isArray(items)) return [];
+
+      return items.filter(item =>
+        item.type === "file" &&
+        imageExtensions.test(item.name)
+      );
+    }
+
+    function findModelInfo(modelle, artwork) {
+      return modelle[artwork.path] ||
+        modelle[artwork.name] ||
+        modelle[artwork.path.replace(/^gallery\//, "")] ||
+        {};
+    }
+
+    function createArtworkCard(artwork, index, modelle) {
+      const card = document.createElement("article");
+      card.className = "artwork-card";
+
+      const imageButton = document.createElement("button");
+      imageButton.className = "artwork-image-button";
+      imageButton.type = "button";
+      imageButton.setAttribute("aria-label", "Apri " + artwork.name);
+
+      const image = document.createElement("img");
+      image.src = artwork.url;
+      image.alt = artwork.name.replace(/\.[^.]+$/, "");
+      image.loading = "lazy";
+
+      imageButton.appendChild(image);
+      imageButton.addEventListener("click", () => openLightbox(index));
+
+      card.appendChild(imageButton);
+
+      const info = findModelInfo(modelle, artwork);
+      const name = document.createElement("p");
+      name.className = "artwork-name";
+
+      if (info.nome) {
+        name.textContent = info.nome;
+      } else {
+        name.textContent = artwork.name.replace(/\.[^.]+$/, "");
       }
 
-      errorMessage.hidden = true;
+      card.appendChild(name);
 
-      artworks.forEach((image, index) => {
-        grid.appendChild(makeArtwork(image, index, links));
+      if (info.instagram) {
+        const instagram = document.createElement("a");
+        instagram.className = "artwork-model-link";
+        instagram.href = info.instagram;
+        instagram.target = "_blank";
+        instagram.rel = "noopener noreferrer";
+        instagram.textContent = "Instagram della modella";
+        card.appendChild(instagram);
+      }
+
+      const actions = document.createElement("div");
+      actions.className = "artwork-actions";
+
+      const copyButton = document.createElement("button");
+      copyButton.className = "copy-artwork-link";
+      copyButton.type = "button";
+      copyButton.textContent = "Copia link dell'opera";
+
+      copyButton.addEventListener("click", async () => {
+        await copyArtworkLink(artwork);
+        copyButton.textContent = "Link pronto";
+        window.setTimeout(() => {
+          copyButton.textContent = "Copia link dell'opera";
+        }, 1800);
       });
+
+      actions.appendChild(copyButton);
+      card.appendChild(actions);
+
+      return card;
     }
 
-    function openLightbox(index) {
-      currentIndex = index;
-      updateLightbox();
-      lightbox.classList.add("open");
-      lightbox.setAttribute("aria-hidden", "false");
-      document.body.style.overflow = "hidden";
-    }
-
-    function closeLightbox() {
-      lightbox.classList.remove("open");
-      lightbox.setAttribute("aria-hidden", "true");
-      document.body.style.overflow = "";
-    }
-
-    function updateLightbox() {
-      if (!artworks[currentIndex]) return;
-      lightboxImage.src = artworks[currentIndex].download_url;
-      lightboxImage.alt = artworks[currentIndex].name;
-    }
-
-    function moveImage(direction) {
+    function openLightbox(index, updateAddress = true) {
       if (!artworks.length) return;
-      currentIndex =
-        (currentIndex + direction + artworks.length) % artworks.length;
-      updateLightbox();
+
+      currentIndex = (index + artworks.length) % artworks.length;
+
+      const artwork = artworks[currentIndex];
+
+      lightboxImage.src = artwork.url;
+      lightboxImage.alt = artwork.name.replace(/\.[^.]+$/, "");
+      lightboxCounter.textContent =
+        (currentIndex + 1) + " / " + artworks.length;
+
+      lightbox.classList.add("is-open");
+      document.body.style.overflow = "hidden";
+
+      if (updateAddress) {
+        const url = new URL(window.location.href);
+        url.searchParams.set("opera", artwork.path);
+        history.replaceState({ artworkOpen: true }, "", url);
+      }
     }
 
-    document.getElementById("closeLightbox").addEventListener("click", closeLightbox);
-    document.getElementById("prevImage").addEventListener("click", () => moveImage(-1));
-    document.getElementById("nextImage").addEventListener("click", () => moveImage(1));
+    function closeLightbox(updateAddress = true) {
+      lightbox.classList.remove("is-open");
+      document.body.style.overflow = "";
+      lightboxImage.src = "";
+      currentIndex = -1;
+
+      if (updateAddress) {
+        const url = new URL(window.location.href);
+        url.searchParams.delete("opera");
+        history.replaceState({}, "", url.pathname + url.search + url.hash);
+      }
+    }
+
+    function showNext() {
+      if (currentIndex >= 0) {
+        openLightbox(currentIndex + 1);
+      }
+    }
+
+    function showPrevious() {
+      if (currentIndex >= 0) {
+        openLightbox(currentIndex - 1);
+      }
+    }
+
+    document.getElementById("lightbox-close")
+      .addEventListener("click", () => closeLightbox());
+
+    document.getElementById("lightbox-next")
+      .addEventListener("click", showNext);
+
+    document.getElementById("lightbox-prev")
+      .addEventListener("click", showPrevious);
+
+    lightboxCopy.addEventListener("click", async () => {
+      if (currentIndex < 0) return;
+
+      await copyArtworkLink(artworks[currentIndex]);
+      lightboxCopy.textContent = "Link pronto";
+
+      window.setTimeout(() => {
+        lightboxCopy.textContent = "Copia link dell'opera";
+      }, 1800);
+    });
 
     lightbox.addEventListener("click", event => {
       if (event.target === lightbox) closeLightbox();
     });
 
     document.addEventListener("keydown", event => {
-      if (!lightbox.classList.contains("open")) return;
+      if (!lightbox.classList.contains("is-open")) return;
+
       if (event.key === "Escape") closeLightbox();
-      if (event.key === "ArrowLeft") moveImage(-1);
-      if (event.key === "ArrowRight") moveImage(1);
+      if (event.key === "ArrowRight") showNext();
+      if (event.key === "ArrowLeft") showPrevious();
     });
 
-    lightbox.addEventListener("touchstart", event => {
-      touchStartX = event.changedTouches[0].screenX;
-    }, { passive: true });
+    async function initGallery() {
+      try {
+        const [rootFiles, galleryFiles, modelle] = await Promise.all([
+          loadDirectory(""),
+          loadDirectory("gallery"),
+          loadModelle()
+        ]);
 
-    lightbox.addEventListener("touchend", event => {
-      const distance = event.changedTouches[0].screenX - touchStartX;
-      if (Math.abs(distance) > 50) moveImage(distance > 0 ? -1 : 1);
-    }, { passive: true });
+        const allFiles = [...rootFiles, ...galleryFiles];
 
-    loadGallery();
+        artworks = allFiles
+          .filter(file => file.name !== "modelle.json")
+          .map(file => ({
+            name: file.name,
+            path: file.path,
+            url: rawImageUrl(file.path)
+          }))
+          .sort((a, b) => a.name.localeCompare(b.name, "it"));
+
+        if (!artworks.length) {
+          galleryMessage.textContent =
+            "Non è stato possibile trovare immagini nella galleria.";
+          return;
+        }
+
+        galleryMessage.style.display = "none";
+
+        artworks.forEach((artwork, index) => {
+          galleryGrid.appendChild(
+            createArtworkCard(artwork, index, modelle)
+          );
+        });
+
+        const params = new URLSearchParams(window.location.search);
+        const requestedArtwork = params.get("opera");
+
+        if (requestedArtwork) {
+          const index = artworks.findIndex(artwork =>
+            artwork.path === requestedArtwork ||
+            artwork.name === requestedArtwork
+          );
+
+          if (index !== -1) {
+            openedFromDirectLink = true;
+            openLightbox(index, false);
+          }
+        }
+      } catch (error) {
+        galleryMessage.textContent =
+          "Errore nel caricamento della galleria. Riprova più tardi.";
+      }
+    }
+
+    const menuToggle = document.querySelector(".menu-toggle");
+    const navLinks = document.querySelector(".nav-links");
+
+    if (menuToggle && navLinks) {
+      menuToggle.addEventListener("click", () => {
+        const isOpen = navLinks.classList.toggle("active");
+        menuToggle.setAttribute("aria-expanded", String(isOpen));
+      });
+    }
+
+    initGallery();
   </script>
 </body>
 </html>
