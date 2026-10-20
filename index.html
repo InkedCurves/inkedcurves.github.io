@@ -17,7 +17,6 @@
     }
 
     * { box-sizing: border-box; }
-
     html { scroll-behavior: smooth; }
 
     body {
@@ -29,7 +28,6 @@
     }
 
     body.no-scroll { overflow: hidden; }
-
     a { color: inherit; text-decoration: none; }
     button { font: inherit; }
 
@@ -202,19 +200,14 @@
       margin-top: 12px;
       padding-bottom: 5px;
       border-bottom: 1px solid var(--line);
-      color: var(--ink);
       font-size: 10px;
-      letter-spacing: .8px;
+      letter-spacing: .6px;
       line-height: 1.6;
       text-transform: uppercase;
-      transition: border-color .2s;
     }
 
     .model-link:hover { border-color: var(--ink); }
-
-    .model-link .instagram-symbol {
-      font-size: 14px;
-    }
+    .instagram-symbol { font-size: 15px; }
 
     .gallery-status {
       grid-column: 1 / -1;
@@ -270,12 +263,6 @@
       gap: 20px;
       padding: 25px 0;
       border-bottom: 1px solid var(--line);
-      transition: padding .2s;
-    }
-
-    .social-link:hover {
-      padding-right: 8px;
-      padding-left: 8px;
     }
 
     .social-name {
@@ -409,7 +396,7 @@
 
       .model-link {
         font-size: 9px;
-        letter-spacing: .3px;
+        letter-spacing: .2px;
       }
 
       .artist-content,
@@ -561,28 +548,7 @@
     const REPO = "inkedcurves.github.io";
     const IMAGE_EXTENSIONS = /\.(jpe?g|png|webp|gif)$/i;
 
-    /*
-      AGGIUNGI QUI I PROFILI INSTAGRAM DELLE MODELLE.
-
-      La chiave deve corrispondere ESATTAMENTE al nome del file
-      dell'immagine presente nel repository.
-
-      Esempio:
-      "Bikini Wife.JPG": "https://www.instagram.com/nome_modella/",
-      "Foto B Art.JPG": "https://www.instagram.com/altra_modella/",
-
-      Finché non inserisci un link valido, il collegamento
-      Instagram non verrà mostrato sotto quella specifica opera.
-    */
-
-    const MODEL_INSTAGRAM = {
-      "Bikini Wife.JPG": "",
-      "Foto B Art.JPG": "",
-      "Helart Muse.JPG": "",
-      "Opera_senza_titolo.jpeg": ""
-    };
-
-    const pages = ["home", "gallery", "artist", "contacts"];
+    let modelLinks = {};
     let images = [];
     let currentIndex = 0;
     let touchStartX = 0;
@@ -593,7 +559,9 @@
     function showPage() {
       let page = location.hash.slice(1).toLowerCase();
 
-      if (!pages.includes(page)) page = "home";
+      if (!["home", "gallery", "artist", "contacts"].includes(page)) {
+        page = "home";
+      }
 
       document.querySelectorAll(".page").forEach(section => {
         section.classList.toggle("active", section.id === page);
@@ -616,10 +584,34 @@
     window.addEventListener("hashchange", showPage);
     showPage();
 
-    function getModelLink(filename) {
-      const url = MODEL_INSTAGRAM[filename];
+    async function loadModelLinks() {
+      try {
+        const response = await fetch("modelle.json");
 
-      if (!url || !url.trim()) return null;
+        if (!response.ok) {
+          throw new Error("File modelle.json non trovato.");
+        }
+
+        const data = await response.json();
+
+        if (data && typeof data === "object" && !Array.isArray(data)) {
+          modelLinks = data;
+        }
+      } catch (error) {
+        console.warn(
+          "I link delle modelle non sono disponibili. " +
+          "Controlla che modelle.json sia presente nel repository.",
+          error
+        );
+
+        modelLinks = {};
+      }
+    }
+
+    function getModelLink(filename) {
+      const url = modelLinks[filename];
+
+      if (typeof url !== "string" || !url.trim()) return null;
 
       try {
         const parsed = new URL(url);
@@ -732,10 +724,15 @@
           modelLink.href = modelUrl;
           modelLink.target = "_blank";
           modelLink.rel = "noopener noreferrer";
-          modelLink.innerHTML =
-            '<span class="instagram-symbol">◎</span>' +
-            '<span>Scopri la modella su Instagram ↗</span>';
 
+          const symbol = document.createElement("span");
+          symbol.className = "instagram-symbol";
+          symbol.textContent = "◎";
+
+          const label = document.createElement("span");
+          label.textContent = "Scopri la modella su Instagram ↗";
+
+          modelLink.append(symbol, label);
           card.appendChild(modelLink);
         }
 
@@ -827,7 +824,12 @@
       }
     }, { passive: true });
 
-    loadImages();
+    async function startSite() {
+      await loadModelLinks();
+      await loadImages();
+    }
+
+    startSite();
   </script>
 </body>
 </html>
