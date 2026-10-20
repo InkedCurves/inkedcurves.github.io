@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -29,11 +30,7 @@
 
     body.no-scroll { overflow: hidden; }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
+    a { color: inherit; text-decoration: none; }
     button { font: inherit; }
 
     header {
@@ -160,9 +157,11 @@
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
+      gap: 24px 14px;
       padding: 10px 6% 70px;
     }
+
+    .artwork-card { min-width: 0; }
 
     .artwork {
       position: relative;
@@ -194,6 +193,27 @@
       background: rgba(247, 247, 245, .9);
       font-size: 10px;
       letter-spacing: 1px;
+    }
+
+    .model-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 12px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid var(--line);
+      color: var(--ink);
+      font-size: 10px;
+      letter-spacing: .8px;
+      line-height: 1.6;
+      text-transform: uppercase;
+      transition: border-color .2s;
+    }
+
+    .model-link:hover { border-color: var(--ink); }
+
+    .model-link .instagram-symbol {
+      font-size: 14px;
     }
 
     .gallery-status {
@@ -383,8 +403,13 @@
 
       .gallery-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 8px;
+        gap: 22px 8px;
         padding: 0 4% 50px;
+      }
+
+      .model-link {
+        font-size: 9px;
+        letter-spacing: .3px;
       }
 
       .artist-content,
@@ -536,6 +561,27 @@
     const REPO = "inkedcurves.github.io";
     const IMAGE_EXTENSIONS = /\.(jpe?g|png|webp|gif)$/i;
 
+    /*
+      AGGIUNGI QUI I PROFILI INSTAGRAM DELLE MODELLE.
+
+      La chiave deve corrispondere ESATTAMENTE al nome del file
+      dell'immagine presente nel repository.
+
+      Esempio:
+      "Bikini Wife.JPG": "https://www.instagram.com/nome_modella/",
+      "Foto B Art.JPG": "https://www.instagram.com/altra_modella/",
+
+      Finché non inserisci un link valido, il collegamento
+      Instagram non verrà mostrato sotto quella specifica opera.
+    */
+
+    const MODEL_INSTAGRAM = {
+      "Bikini Wife.JPG": "",
+      "Foto B Art.JPG": "",
+      "Helart Muse.JPG": "",
+      "Opera_senza_titolo.jpeg": ""
+    };
+
     const pages = ["home", "gallery", "artist", "contacts"];
     let images = [];
     let currentIndex = 0;
@@ -569,6 +615,27 @@
 
     window.addEventListener("hashchange", showPage);
     showPage();
+
+    function getModelLink(filename) {
+      const url = MODEL_INSTAGRAM[filename];
+
+      if (!url || !url.trim()) return null;
+
+      try {
+        const parsed = new URL(url);
+
+        if (
+          parsed.protocol !== "https:" ||
+          !["instagram.com", "www.instagram.com"].includes(parsed.hostname)
+        ) {
+          return null;
+        }
+
+        return parsed.href;
+      } catch {
+        return null;
+      }
+    }
 
     async function loadImages() {
       const home = document.getElementById("home-gallery");
@@ -635,6 +702,9 @@
       list.forEach(item => {
         const index = images.findIndex(image => image.url === item.url);
 
+        const card = document.createElement("article");
+        card.className = "artwork-card";
+
         const button = document.createElement("button");
         button.type = "button";
         button.className = "artwork";
@@ -651,14 +721,25 @@
         number.textContent = String(index + 1).padStart(2, "0");
 
         button.append(img, number);
-        button.addEventListener("click", () => {
-          if (location.hash !== "#gallery") {
-            location.hash = "gallery";
-          }
-          openLightbox(index);
-        });
+        button.addEventListener("click", () => openLightbox(index));
+        card.appendChild(button);
 
-        container.appendChild(button);
+        const modelUrl = getModelLink(item.name);
+
+        if (modelUrl) {
+          const modelLink = document.createElement("a");
+          modelLink.className = "model-link";
+          modelLink.href = modelUrl;
+          modelLink.target = "_blank";
+          modelLink.rel = "noopener noreferrer";
+          modelLink.innerHTML =
+            '<span class="instagram-symbol">◎</span>' +
+            '<span>Scopri la modella su Instagram ↗</span>';
+
+          card.appendChild(modelLink);
+        }
+
+        container.appendChild(card);
       });
     }
 
