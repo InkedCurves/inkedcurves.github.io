@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Contatti e profili Instagram di Inked Curves e Dario.">
+  <title>Contatti — Inked Curves</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a class="logo" href="index.html">INKED CURVES</a>
+
+      <button
+        class="menu-toggle"
+        aria-label="Apri il menu"
+        aria-expanded="false"
+      >☰</button>
+
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="artist.html">L'artista</a>
+        <a href="contacts.html">Contatti</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page">
+    <p class="eyebrow">RESTIAMO IN CONTATTO</p>
+
+    <h1>Contatti</h1>
+
+    <p class="lead">
+      Un segno può diventare un incontro.
+    </p>
+
+    <div class="body-copy">
+      <p>
+        Seguimi su Instagram per scoprire le nuove illustrazioni
+        e accompagnarmi nel mondo di Inked Curves.
+      </p>
+    </div>
+
+    <div class="contact-list">
+      <a
+        href="https://www.instagram.com/inked_curves/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Instagram — Inked Curves ↗
+      </a>
+
+      <a
+        href="https://www.instagram.com/dario.19.83/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Instagram — Dario ↗
+      </a>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <span>© <span class="year"></span> INKED CURVES</span>
+      <span>IL CORPO DIVENTA ARTE.</span>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelector(".year").textContent =
+      new Date().getFullYear();
+
+    const toggle = document.querySelector(".menu-toggle");
+    const menu = document.querySelector(".nav-links");
+
+    toggle.addEventListener("click", () => {
+      const open = menu.classList.toggle("open");
+
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.setAttribute(
+        "aria-label",
+        open ? "Chiudi il menu" : "Apri il menu"
+      );
+    });
+  </script>
+</body>
+</html>
