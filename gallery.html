@@ -1,0 +1,311 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Galleria di illustrazioni Inked Curves.">
+  <title>Gallery — Inked Curves</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a class="logo" href="index.html">INKED CURVES</a>
+      <button class="menu-toggle" aria-label="Apri il menu" aria-expanded="false">☰</button>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="artist.html">L'artista</a>
+        <a href="contacts.html">Contatti</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page">
+    <div class="page-intro">
+      <p class="eyebrow">ILLUSTRAZIONE · CORPO · INCHIOSTRO</p>
+      <h1>Selected works</h1>
+      <p>Una selezione di disegni, tratti e suggestioni.</p>
+    </div>
+
+    <div class="gallery-grid" id="galleryGrid">
+      <p class="gallery-status">Caricamento delle opere…</p>
+    </div>
+    <p class="gallery-status" id="galleryError" hidden></p>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <span>© <span class="year"></span> INKED CURVES</span>
+      <span>IL CORPO DIVENTA ARTE.</span>
+    </div>
+  </footer>
+
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lightbox-close" id="closeLightbox" aria-label="Chiudi">×</button>
+    <button class="lightbox-prev" id="prevImage" aria-label="Opera precedente">‹</button>
+    <img id="lightboxImage" alt="">
+    <button class="lightbox-next" id="nextImage" aria-label="Opera successiva">›</button>
+  </div>
+
+  <script>
+    const REPOSITORY = "InkedCurves/inkedcurves.github.io";
+    const ROOT_API = `https://api.github.com/repos/${REPOSITORY}/contents/`;
+
+    const grid = document.getElementById("galleryGrid");
+    const errorMessage = document.getElementById("galleryError");
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImage = document.getElementById("lightboxImage");
+
+    let artworks = [];
+    let currentIndex = 0;
+    let touchStartX = 0;
+
+    document.querySelector(".year").textContent = new Date().getFullYear();
+
+    const toggle = document.querySelector(".menu-toggle");
+    const menu = document.querySelector(".nav-links");
+
+    toggle.addEventListener("click", () => {
+      const open = menu.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.setAttribute("aria-label", open ? "Chiudi il menu" : "Apri il menu");
+    });
+
+    menu.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => menu.classList.remove("open"));
+    });
+
+    async function loadModelLinks() {
+      try {
+        const response = await fetch(`./modelle.json?v=${Date.now()}`, {
+          cache: "no-store"
+        });
+
+        if (!response.ok) throw new Error("File modelle.json non trovato");
+
+        const data = await response.json();
+
+        if (!data || typeof data !== "object" || Array.isArray(data)) {
+          throw new Error("Formato modelle.json non valido");
+        }
+
+        return data;
+      } catch (error) {
+        console.warn("Errore modelle.json:", error);
+        return {};
+      }
+    }
+
+    async function loadImages(path) {
+      try {
+        const response = await fetch(ROOT_API + path, {
+          cache: "no-store"
+        });
+
+        if (!response.ok) return [];
+
+        const items = await response.json();
+
+        if (!Array.isArray(items)) return [];
+
+        return items.filter(item =>
+          item.type === "file" &&
+          /\.(jpe?g|png|webp|gif|avif)$/i.test(item.name)
+        );
+      } catch (error) {
+        console.warn("Errore nel caricamento delle immagini:", error);
+        return [];
+      }
+    }
+
+    function getModel(image, links) {
+      const keys = [
+        image.name,
+        image.path,
+        image.path.replace(/^gallery\//, "")
+      ];
+
+      for (const key of keys) {
+        const value = links[key];
+
+        if (value && typeof value === "object") {
+          return {
+            nome: typeof value.nome === "string" ? value.nome.trim() : "",
+            instagram: typeof value.instagram === "string"
+              ? value.instagram.trim()
+              : ""
+          };
+        }
+
+        if (typeof value === "string") {
+          return { nome: "", instagram: value.trim() };
+        }
+      }
+
+      return { nome: "", instagram: "" };
+    }
+
+    function validInstagram(value) {
+      try {
+        const url = new URL(value);
+        return url.protocol === "https:" &&
+          ["instagram.com", "www.instagram.com"].includes(url.hostname);
+      } catch {
+        return false;
+      }
+    }
+
+    function makeArtwork(image, index, links) {
+      const article = document.createElement("article");
+      article.className = "artwork";
+
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "artwork-image";
+      button.setAttribute("aria-label", `Ingrandisci opera ${index + 1}`);
+
+      const img = document.createElement("img");
+      img.src = image.download_url;
+      img.alt = `Inked Curves — ${image.name}`;
+      img.loading = index < 2 ? "eager" : "lazy";
+      img.decoding = "async";
+
+      const number = document.createElement("span");
+      number.className = "artwork-number";
+      number.textContent = String(index + 1).padStart(2, "0");
+
+      button.append(img, number);
+      button.addEventListener("click", () => openLightbox(index));
+
+      const caption = document.createElement("div");
+      caption.className = "artwork-caption";
+
+      const name = document.createElement("h2");
+      name.className = "model-name";
+      name.hidden = true;
+
+      const link = document.createElement("a");
+      link.className = "model-link";
+      link.hidden = true;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+
+      const symbol = document.createElement("span");
+      symbol.textContent = "◎";
+
+      const text = document.createElement("span");
+      text.textContent = "Scopri la modella su Instagram ↗";
+
+      link.append(symbol, text);
+
+      const model = getModel(image, links);
+
+      if (model.nome) {
+        name.textContent = model.nome;
+        name.hidden = false;
+      }
+
+      if (model.instagram && validInstagram(model.instagram)) {
+        link.href = model.instagram;
+        link.hidden = false;
+      }
+
+      caption.append(name, link);
+      article.append(button, caption);
+
+      return article;
+    }
+
+    async function loadGallery() {
+      const [links, rootImages, folderImages] = await Promise.all([
+        loadModelLinks(),
+        loadImages(""),
+        loadImages("gallery")
+      ]);
+
+      const seen = new Set();
+
+      artworks = [...rootImages, ...folderImages]
+        .filter(image => {
+          const key = image.path || image.name;
+          if (seen.has(key)) return false;
+          seen.add(key);
+          return true;
+        })
+        .sort((a, b) =>
+          a.name.localeCompare(b.name, "it", { numeric: true })
+        );
+
+      grid.replaceChildren();
+
+      if (!artworks.length) {
+        errorMessage.hidden = false;
+        errorMessage.textContent =
+          "Non sono state trovate immagini. Controlla il repository GitHub.";
+        return;
+      }
+
+      errorMessage.hidden = true;
+
+      artworks.forEach((image, index) => {
+        grid.appendChild(makeArtwork(image, index, links));
+      });
+    }
+
+    function openLightbox(index) {
+      currentIndex = index;
+      updateLightbox();
+      lightbox.classList.add("open");
+      lightbox.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove("open");
+      lightbox.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    }
+
+    function updateLightbox() {
+      if (!artworks[currentIndex]) return;
+      lightboxImage.src = artworks[currentIndex].download_url;
+      lightboxImage.alt = artworks[currentIndex].name;
+    }
+
+    function moveImage(direction) {
+      if (!artworks.length) return;
+      currentIndex =
+        (currentIndex + direction + artworks.length) % artworks.length;
+      updateLightbox();
+    }
+
+    document.getElementById("closeLightbox").addEventListener("click", closeLightbox);
+    document.getElementById("prevImage").addEventListener("click", () => moveImage(-1));
+    document.getElementById("nextImage").addEventListener("click", () => moveImage(1));
+
+    lightbox.addEventListener("click", event => {
+      if (event.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener("keydown", event => {
+      if (!lightbox.classList.contains("open")) return;
+      if (event.key === "Escape") closeLightbox();
+      if (event.key === "ArrowLeft") moveImage(-1);
+      if (event.key === "ArrowRight") moveImage(1);
+    });
+
+    lightbox.addEventListener("touchstart", event => {
+      touchStartX = event.changedTouches[0].screenX;
+    }, { passive: true });
+
+    lightbox.addEventListener("touchend", event => {
+      const distance = event.changedTouches[0].screenX - touchStartX;
+      if (Math.abs(distance) > 50) moveImage(distance > 0 ? -1 : 1);
+    }, { passive: true });
+
+    loadGallery();
+  </script>
+</body>
+</html>
