@@ -64,6 +64,49 @@
       cursor: pointer;
     }
 
+    .like-area {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 7px;
+      margin: 12px 0;
+    }
+
+    .like-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 7px 12px;
+      border: 1px solid currentColor;
+      border-radius: 30px;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .like-button .heart {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .like-button.liked {
+      color: #e34b65;
+      border-color: #e34b65;
+    }
+
+    .like-button:disabled {
+      cursor: default;
+      opacity: 0.8;
+    }
+
+    .like-count {
+      font-size: 13px;
+      opacity: 0.8;
+    }
+
     .gallery-message {
       padding: 25px 0;
       text-align: center;
@@ -243,6 +286,13 @@
     const REPO = "inkedcurves.github.io";
     const BRANCH = "main";
 
+    // CONFIGURAZIONE SUPABASE
+    const SUPABASE_URL =
+      "https://umbfkdqumqywqstsravi.supabase.co";
+
+    const SUPABASE_KEY =
+      "sb_publishable_wQkyv-chm52CaGbVD-clfQ_wek5l_JS";
+
     const galleryGrid = document.getElementById("gallery-grid");
     const galleryMessage = document.getElementById("gallery-message");
     const lightbox = document.getElementById("lightbox");
@@ -252,8 +302,6 @@
 
     let artworks = [];
     let currentIndex = -1;
-    let previousUrl = window.location.href;
-    let openedFromDirectLink = false;
 
     const imageExtensions = /\.(jpe?g|png|webp|gif|avif)$/i;
 
@@ -281,6 +329,7 @@
       }
     }
 
+    // Recupera le informazioni delle modelle
     async function loadModelle() {
       try {
         const response = await fetch(
@@ -296,6 +345,7 @@
       }
     }
 
+    // Recupera le immagini da GitHub
     async function loadDirectory(path) {
       const endpoint =
         "https://api.github.com/repos/" + USER + "/" + REPO +
@@ -322,6 +372,112 @@
         {};
     }
 
+    // Recupera il numero di like dal database
+    async function getLikes(artworkPath) {
+      try {
+        const url = SUPABASE_URL +
+          "/rest/v1/artwork_likes" +
+          "?select=likes&artwork_path=eq." +
+          encodeURIComponent(artworkPath);
+
+        const response = await fetch(url, {
+          headers: {
+            "apikey": SUPABASE_KEY,
+            "Authorization": "Bearer " + SUPABASE_KEY
+          }
+        });
+
+        if (!response.ok) return 0;
+
+        const data = await response.json();
+
+        return data.length ? Number(data[0].likes) || 0 : 0;
+      } catch (error) {
+        return 0;
+      }
+    }
+
+    // Registra un like nel database
+    async function sendLike(artworkPath) {
+      const response = await fetch(
+        SUPABASE_URL + "/rest/v1/rpc/increment_artwork_like",
+        {
+          method: "POST",
+          headers: {
+            "apikey": SUPABASE_KEY,
+            "Authorization": "Bearer " + SUPABASE_KEY,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            p_artwork_path: artworkPath
+          })
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Impossibile registrare il like");
+      }
+
+      return Number(await response.json());
+    }
+
+    // Crea il pulsante del cuore
+    async function createLikeButton(artwork, area) {
+      const button = document.createElement("button");
+      button.className = "like-button";
+      button.type = "button";
+
+      const heart = document.createElement("span");
+      heart.className = "heart";
+      heart.textContent = "♡";
+
+      const label = document.createElement("span");
+      label.textContent = "Mi piace";
+
+      const count = document.createElement("span");
+      count.className = "like-count";
+      count.textContent = "…";
+
+      button.appendChild(heart);
+      button.appendChild(label);
+      area.appendChild(button);
+      area.appendChild(count);
+
+      const storageKey = "inkedcurves-liked-" + artwork.path;
+      const alreadyLiked = localStorage.getItem(storageKey) === "yes";
+
+      if (alreadyLiked) {
+        button.classList.add("liked");
+        heart.textContent = "♥";
+        label.textContent = "Ti piace";
+        button.disabled = true;
+      }
+
+      const initialLikes = await getLikes(artwork.path);
+      count.textContent = initialLikes;
+
+      button.addEventListener("click", async () => {
+        if (localStorage.getItem(storageKey) === "yes") return;
+
+        button.disabled = true;
+        label.textContent = "Invio...";
+
+        try {
+          const newLikes = await sendLike(artwork.path);
+
+          localStorage.setItem(storageKey, "yes");
+
+          button.classList.add("liked");
+          heart.textContent = "♥";
+          label.textContent = "Ti piace";
+          count.textContent = newLikes;
+        } catch (error) {
+          label.textContent = "Riprova";
+          button.disabled = false;
+        }
+      });
+    }
+
     function createArtworkCard(artwork, index, modelle) {
       const card = document.createElement("article");
       card.className = "artwork-card";
@@ -345,11 +501,8 @@
       const name = document.createElement("p");
       name.className = "artwork-name";
 
-      if (info.nome) {
-        name.textContent = info.nome;
-      } else {
-        name.textContent = artwork.name.replace(/\.[^.]+$/, "");
-      }
+      name.textContent = info.nome ||
+        artwork.name.replace(/\.[^.]+$/, "");
 
       card.appendChild(name);
 
@@ -363,6 +516,13 @@
         card.appendChild(instagram);
       }
 
+      // Area dei like
+      const likeArea = document.createElement("div");
+      likeArea.className = "like-area";
+      card.appendChild(likeArea);
+
+      createLikeButton(artwork, likeArea);
+
       const actions = document.createElement("div");
       actions.className = "artwork-actions";
 
@@ -374,6 +534,7 @@
       copyButton.addEventListener("click", async () => {
         await copyArtworkLink(artwork);
         copyButton.textContent = "Link pronto";
+
         window.setTimeout(() => {
           copyButton.textContent = "Copia link dell'opera";
         }, 1800);
@@ -394,6 +555,7 @@
 
       lightboxImage.src = artwork.url;
       lightboxImage.alt = artwork.name.replace(/\.[^.]+$/, "");
+
       lightboxCounter.textContent =
         (currentIndex + 1) + " / " + artworks.length;
 
@@ -507,7 +669,6 @@
           );
 
           if (index !== -1) {
-            openedFromDirectLink = true;
             openLightbox(index, false);
           }
         }
