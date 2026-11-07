@@ -64,6 +64,7 @@
       cursor: pointer;
     }
 
+    /* LIKE */
     .like-area {
       display: flex;
       justify-content: center;
@@ -112,15 +113,17 @@
       text-align: center;
     }
 
+    /* LIGHTBOX */
     .lightbox {
       position: fixed;
       inset: 0;
       z-index: 9999;
       display: none;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       background: rgba(0, 0, 0, 0.96);
-      padding: 55px 52px 35px;
+      padding: 65px 52px 100px;
       box-sizing: border-box;
     }
 
@@ -178,21 +181,6 @@
       right: 6px;
     }
 
-    .lightbox-copy {
-      position: absolute;
-      bottom: 12px;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 9px 13px;
-      border: 1px solid #fff;
-      background: rgba(20, 20, 20, 0.9);
-      color: #fff;
-      font: inherit;
-      font-size: 13px;
-      white-space: nowrap;
-      cursor: pointer;
-    }
-
     .lightbox-counter {
       position: absolute;
       top: 23px;
@@ -202,13 +190,49 @@
       font-size: 12px;
     }
 
+    /* LIKE CENTRALE SOTTO L'IMMAGINE */
+    .lightbox-like-area {
+      position: absolute;
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: max-content;
+      max-width: 90%;
+      margin: 0;
+    }
+
+    .lightbox-like-area .like-button {
+      padding: 10px 18px;
+      border-color: #fff;
+      color: #fff;
+      background: rgba(20, 20, 20, 0.85);
+      font-size: 17px;
+    }
+
+    .lightbox-like-area .like-button.liked {
+      color: #ff647d;
+      border-color: #ff647d;
+    }
+
+    .lightbox-like-area .like-button .heart {
+      font-size: 24px;
+    }
+
+    .lightbox-like-area .like-count {
+      color: #fff;
+      font-size: 15px;
+    }
+
     @media (max-width: 480px) {
       .gallery-grid {
         gap: 12px;
       }
 
       .lightbox {
-        padding: 55px 38px 55px;
+        padding: 65px 38px 100px;
       }
 
       .lightbox-prev {
@@ -217,6 +241,10 @@
 
       .lightbox-next {
         right: 2px;
+      }
+
+      .lightbox-like-area {
+        bottom: 24px;
       }
     }
   </style>
@@ -276,9 +304,7 @@
 
     <div id="lightbox-counter" class="lightbox-counter"></div>
 
-    <button id="lightbox-copy" class="lightbox-copy">
-      Copia link dell'opera
-    </button>
+    <div id="lightbox-like-area" class="like-area lightbox-like-area"></div>
   </div>
 
   <script>
@@ -286,7 +312,6 @@
     const REPO = "inkedcurves.github.io";
     const BRANCH = "main";
 
-    // CONFIGURAZIONE SUPABASE
     const SUPABASE_URL =
       "https://umbfkdqumqywqstsravi.supabase.co";
 
@@ -298,10 +323,14 @@
     const lightbox = document.getElementById("lightbox");
     const lightboxImage = document.getElementById("lightbox-image");
     const lightboxCounter = document.getElementById("lightbox-counter");
-    const lightboxCopy = document.getElementById("lightbox-copy");
+    const lightboxLikeArea =
+      document.getElementById("lightbox-like-area");
 
     let artworks = [];
     let currentIndex = -1;
+
+    // Stato condiviso dei like nella pagina
+    const likeStates = new Map();
 
     const imageExtensions = /\.(jpe?g|png|webp|gif|avif)$/i;
 
@@ -329,7 +358,6 @@
       }
     }
 
-    // Recupera le informazioni delle modelle
     async function loadModelle() {
       try {
         const response = await fetch(
@@ -345,7 +373,6 @@
       }
     }
 
-    // Recupera le immagini da GitHub
     async function loadDirectory(path) {
       const endpoint =
         "https://api.github.com/repos/" + USER + "/" + REPO +
@@ -372,7 +399,29 @@
         {};
     }
 
-    // Recupera il numero di like dal database
+    function getStorageKey(path) {
+      return "inkedcurves-liked-" + path;
+    }
+
+    function createLikeState(path) {
+      const state = {
+        likes: 0,
+        liked: localStorage.getItem(getStorageKey(path)) === "yes",
+        loading: true,
+        controls: []
+      };
+
+      likeStates.set(path, state);
+
+      getLikes(path).then(likes => {
+        state.likes = likes;
+        state.loading = false;
+        updateLikeControls(state);
+      });
+
+      return state;
+    }
+
     async function getLikes(artworkPath) {
       try {
         const url = SUPABASE_URL +
@@ -387,17 +436,19 @@
           }
         });
 
-        if (!response.ok) return 0;
+        if (!response.ok) {
+          throw new Error("Errore nel recupero dei like");
+        }
 
         const data = await response.json();
 
         return data.length ? Number(data[0].likes) || 0 : 0;
       } catch (error) {
+        console.error(error);
         return 0;
       }
     }
 
-    // Registra un like nel database
     async function sendLike(artworkPath) {
       const response = await fetch(
         SUPABASE_URL + "/rest/v1/rpc/increment_artwork_like",
@@ -421,61 +472,73 @@
       return Number(await response.json());
     }
 
-    // Crea il pulsante del cuore
-    async function createLikeButton(artwork, area) {
+    function updateLikeControls(state) {
+      state.controls.forEach(control => {
+        control.button.classList.toggle("liked", state.liked);
+        control.heart.textContent = state.liked ? "♥" : "♡";
+        control.label.textContent = state.liked
+          ? "Ti piace"
+          : "Mi piace";
+
+        control.count.textContent = state.loading
+          ? "…"
+          : state.likes;
+
+        control.button.disabled = state.liked || state.loading;
+      });
+    }
+
+    async function handleLike(path) {
+      const state = likeStates.get(path);
+
+      if (!state || state.liked || state.loading) return;
+
+      state.loading = true;
+      updateLikeControls(state);
+
+      try {
+        const newLikes = await sendLike(path);
+
+        state.likes = newLikes;
+        state.liked = true;
+        localStorage.setItem(getStorageKey(path), "yes");
+      } catch (error) {
+        console.error(error);
+        alert("Non è stato possibile registrare il like. Riprova.");
+      }
+
+      state.loading = false;
+      updateLikeControls(state);
+    }
+
+    function createLikeControl(path, area) {
+      const state = likeStates.get(path);
+
       const button = document.createElement("button");
       button.className = "like-button";
       button.type = "button";
 
       const heart = document.createElement("span");
       heart.className = "heart";
-      heart.textContent = "♡";
 
       const label = document.createElement("span");
-      label.textContent = "Mi piace";
 
       const count = document.createElement("span");
       count.className = "like-count";
-      count.textContent = "…";
 
       button.appendChild(heart);
       button.appendChild(label);
       area.appendChild(button);
       area.appendChild(count);
 
-      const storageKey = "inkedcurves-liked-" + artwork.path;
-      const alreadyLiked = localStorage.getItem(storageKey) === "yes";
+      const control = { button, heart, label, count };
+      state.controls.push(control);
 
-      if (alreadyLiked) {
-        button.classList.add("liked");
-        heart.textContent = "♥";
-        label.textContent = "Ti piace";
-        button.disabled = true;
-      }
+      button.addEventListener("click", () => handleLike(path));
 
-      const initialLikes = await getLikes(artwork.path);
-      count.textContent = initialLikes;
+      updateLikeControls(state);
 
-      button.addEventListener("click", async () => {
-        if (localStorage.getItem(storageKey) === "yes") return;
-
-        button.disabled = true;
-        label.textContent = "Invio...";
-
-        try {
-          const newLikes = await sendLike(artwork.path);
-
-          localStorage.setItem(storageKey, "yes");
-
-          button.classList.add("liked");
-          heart.textContent = "♥";
-          label.textContent = "Ti piace";
-          count.textContent = newLikes;
-        } catch (error) {
-          label.textContent = "Riprova";
-          button.disabled = false;
-        }
-      });
+      return control;
     }
 
     function createArtworkCard(artwork, index, modelle) {
@@ -516,12 +579,11 @@
         card.appendChild(instagram);
       }
 
-      // Area dei like
       const likeArea = document.createElement("div");
       likeArea.className = "like-area";
       card.appendChild(likeArea);
 
-      createLikeButton(artwork, likeArea);
+      createLikeControl(artwork.path, likeArea);
 
       const actions = document.createElement("div");
       actions.className = "artwork-actions";
@@ -559,6 +621,10 @@
       lightboxCounter.textContent =
         (currentIndex + 1) + " / " + artworks.length;
 
+      // Mostra il like della stessa opera, con lo stesso contatore
+      lightboxLikeArea.innerHTML = "";
+      createLikeControl(artwork.path, lightboxLikeArea);
+
       lightbox.classList.add("is-open");
       document.body.style.overflow = "hidden";
 
@@ -573,6 +639,7 @@
       lightbox.classList.remove("is-open");
       document.body.style.overflow = "";
       lightboxImage.src = "";
+      lightboxLikeArea.innerHTML = "";
       currentIndex = -1;
 
       if (updateAddress) {
@@ -602,17 +669,6 @@
 
     document.getElementById("lightbox-prev")
       .addEventListener("click", showPrevious);
-
-    lightboxCopy.addEventListener("click", async () => {
-      if (currentIndex < 0) return;
-
-      await copyArtworkLink(artworks[currentIndex]);
-      lightboxCopy.textContent = "Link pronto";
-
-      window.setTimeout(() => {
-        lightboxCopy.textContent = "Copia link dell'opera";
-      }, 1800);
-    });
 
     lightbox.addEventListener("click", event => {
       if (event.target === lightbox) closeLightbox();
@@ -651,6 +707,11 @@
           return;
         }
 
+        // Prepara lo stato dei like per ogni opera
+        artworks.forEach(artwork => {
+          createLikeState(artwork.path);
+        });
+
         galleryMessage.style.display = "none";
 
         artworks.forEach((artwork, index) => {
@@ -673,6 +734,7 @@
           }
         }
       } catch (error) {
+        console.error(error);
         galleryMessage.textContent =
           "Errore nel caricamento della galleria. Riprova più tardi.";
       }
