@@ -64,7 +64,7 @@
       cursor: pointer;
     }
 
-    /* LIKE */
+    /* LIKE NELLA GALLERIA */
     .like-area {
       display: flex;
       justify-content: center;
@@ -86,6 +86,7 @@
       font: inherit;
       font-size: 15px;
       cursor: pointer;
+      white-space: nowrap;
     }
 
     .like-button .heart {
@@ -123,7 +124,7 @@
       align-items: center;
       justify-content: center;
       background: rgba(0, 0, 0, 0.96);
-      padding: 65px 52px 100px;
+      padding: 65px 52px 145px;
       box-sizing: border-box;
     }
 
@@ -190,26 +191,43 @@
       font-size: 12px;
     }
 
-    /* LIKE CENTRALE SOTTO L'IMMAGINE */
+    /* LIKE CENTRALE SOTTO IL DISEGNO */
     .lightbox-like-area {
       position: absolute;
-      bottom: 22px;
+      bottom: 95px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
+      flex-direction: row;
       justify-content: center;
       align-items: center;
-      width: max-content;
-      max-width: 90%;
+      gap: 10px;
+      width: auto;
+      max-width: 95%;
       margin: 0;
+      z-index: 10;
+      white-space: nowrap;
     }
 
     .lightbox-like-area .like-button {
-      padding: 10px 18px;
-      border-color: #fff;
+      display: inline-flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 145px;
+      padding: 12px 20px;
+      border: 1px solid #fff;
+      border-radius: 30px;
       color: #fff;
-      background: rgba(20, 20, 20, 0.85);
+      background: rgba(20, 20, 20, 0.95);
       font-size: 17px;
+      white-space: nowrap;
+    }
+
+    .lightbox-like-area .like-button span {
+      display: inline-block;
+      white-space: nowrap;
     }
 
     .lightbox-like-area .like-button.liked {
@@ -219,11 +237,13 @@
 
     .lightbox-like-area .like-button .heart {
       font-size: 24px;
+      line-height: 1;
     }
 
     .lightbox-like-area .like-count {
       color: #fff;
       font-size: 15px;
+      white-space: nowrap;
     }
 
     @media (max-width: 480px) {
@@ -232,7 +252,7 @@
       }
 
       .lightbox {
-        padding: 65px 38px 100px;
+        padding: 65px 38px 145px;
       }
 
       .lightbox-prev {
@@ -244,7 +264,14 @@
       }
 
       .lightbox-like-area {
-        bottom: 24px;
+        bottom: 95px;
+        max-width: 95%;
+      }
+
+      .lightbox-like-area .like-button {
+        min-width: 145px;
+        padding: 12px 16px;
+        font-size: 16px;
       }
     }
   </style>
@@ -329,7 +356,6 @@
     let artworks = [];
     let currentIndex = -1;
 
-    // Stato condiviso dei like nella pagina
     const likeStates = new Map();
 
     const imageExtensions = /\.(jpe?g|png|webp|gif|avif)$/i;
@@ -621,7 +647,6 @@
       lightboxCounter.textContent =
         (currentIndex + 1) + " / " + artworks.length;
 
-      // Mostra il like della stessa opera, con lo stesso contatore
       lightboxLikeArea.innerHTML = "";
       createLikeControl(artwork.path, lightboxLikeArea);
 
@@ -707,7 +732,6 @@
           return;
         }
 
-        // Prepara lo stato dei like per ogni opera
         artworks.forEach(artwork => {
           createLikeState(artwork.path);
         });
