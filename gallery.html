@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -240,11 +239,9 @@
       line-height: 1;
     }
 
+    /* NASCONDE IL NUMERO DEI LIKE NEL LIGHTBOX */
     .lightbox-like-area .like-count {
       display: none;
-      color: #fff;
-      font-size: 15px;
-      white-space: nowrap;
     }
 
     @media (max-width: 480px) {
@@ -265,7 +262,7 @@
       }
 
       .lightbox-like-area {
-        bottom: 95px;
+        bottom: 115px;
         max-width: 95%;
       }
 
@@ -344,7 +341,7 @@
       "https://umbfkdqumqywqstsravi.supabase.co";
 
     const SUPABASE_KEY =
-      "sb_publishable_wQkyv-chm52CaGbVD-clfQ_wek5l_JS";
+      "sb_publishable_wQkyv-ch52CaGbVD-clfQ_wek5l_JS";
 
     const galleryGrid = document.getElementById("gallery-grid");
     const galleryMessage = document.getElementById("gallery-message");
@@ -358,7 +355,6 @@
     let currentIndex = -1;
 
     const likeStates = new Map();
-
     const imageExtensions = /\.(jpe?g|png|webp|gif|avif)$/i;
 
     function rawImageUrl(path) {
@@ -435,13 +431,18 @@
         likes: 0,
         liked: localStorage.getItem(getStorageKey(path)) === "yes",
         loading: true,
-        controls: []
+        controls: [],
+        ready: null
       };
 
       likeStates.set(path, state);
 
-      getLikes(path).then(likes => {
+      state.ready = getLikes(path).then(likes => {
         state.likes = likes;
+        state.loading = false;
+        updateLikeControls(state);
+      }).catch(error => {
+        console.error(error);
         state.loading = false;
         updateLikeControls(state);
       });
@@ -755,6 +756,30 @@
           );
 
           if (index !== -1) {
+            const artwork = artworks[index];
+            const state = likeStates.get(artwork.path);
+
+            /*
+              APERTURA TRAMITE LINK DIRETTO:
+              incrementa il contatore su Supabase,
+              ma NON attiva il cuore e NON salva
+              il like nel dispositivo del visitatore.
+            */
+            if (state) {
+              await state.ready;
+
+              try {
+                const newLikes = await sendLike(artwork.path);
+                state.likes = newLikes;
+                updateLikeControls(state);
+              } catch (error) {
+                console.error(
+                  "Errore nel conteggio dell'apertura:",
+                  error
+                );
+              }
+            }
+
             openLightbox(index, false);
           }
         }
